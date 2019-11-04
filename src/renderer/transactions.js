@@ -1,5 +1,29 @@
 'use strict';
 
+// Get the modal
+var addTransactionsModal = document.getElementById("add-transactions-modal");
+
+// When the user clicks on the button, open the modal
+document.getElementById("add-transactions-modal-button").onclick = function() {
+  addTransactionsModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+// addTransactionsModal.getElementsByClassName("close")[0].onclick = function() {
+//   addTransactionsModal.style.display = "none";
+// }
+
+// When the user clicks anywhere outside of the modal, close it
+window.addEventListener('click', function(event) {
+  if (event.target == addTransactionsModal) {
+    closeTransactionsModal();
+  }
+});
+
+function closeTransactionsModal() {
+  addTransactionsModal.style.display = "none";
+}
+
 /**
  * Receive Transactions
  */
@@ -43,6 +67,8 @@ document.getElementById('add_transaction').addEventListener('submit', (evt) => {
 
   // send todo to main process
   ipcRenderer.send('add-transaction', payload);
+
+  closeTransactionsModal();
 
   // reset input
   evt.target[0].value = '';

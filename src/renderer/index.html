@@ -5,8 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
     <title>Moneybin</title>
+
+    <link rel="stylesheet" href="../../node_modules/purecss/build/pure-min.css">
+    <link rel="stylesheet" href="../assets/styles/index.css">
   </head>
   <body>
+    <nav class="pure-menu pure-menu-horizontal">
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a href="#" id="add-transactions-modal-button" class="pure-menu-link">Add Transaction</a></li>
+          <li class="pure-menu-item"><a href="#" id="add-nodes-modal-button" class="pure-menu-link">Add Node</a></li>
+        </ul>
+    </nav>
+
     <section class="filter">
       <form id="filter">
           <label>
@@ -23,60 +33,6 @@
           </button>
         </form>
     </section>
-
-    <section class="container">
-      <div class="columns">
-        <div class="column col-10">
-          <h2 class="text-center">Add Nodes</h2>
-          <form id="add_node">
-            <label>
-              Name: <input type="text" id="name" />
-            </label>
-
-            <label>
-              Type: <select id="type">
-                  <option value="person">Person</option>
-                  <option value="company">Company</option>
-                  <option value="credit_card">Credit Card</option>
-                </select>
-            </label>
-
-            <button type="submit" class="btn">
-              Add Node
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <div class="container">
-      <div class="columns">
-        <div class="column col-10">
-          <h2 class="text-center">Add Transactions</h2>
-          <form id="add_transaction">
-            <label>
-              Date: <input type="text" id="date" />
-            </label>
-
-            <label>
-              From: <input type="text" id="from" />
-            </label>
-
-            <label>
-              To: <input type="text" id="to" />
-            </label>
-
-            <label>
-              Amount: $<input type="text" id="amount" />
-            </label>
-
-            <button type="submit" class="btn">
-              Add Transaction
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
 
     <div id="mySankey"></div>
 
@@ -98,6 +54,72 @@
       </div>
     </div>
 
+    <div id="add-nodes-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="text-center">Add Nodes</h2>
+        <form id="add_node" class="pure-form">
+          <div class="pure-control-group">
+            <label>
+              Name: <input type="text" id="name" />
+            </label>
+          </div>
+
+          <div class="pure-control-group">
+            <label>
+              Type: <select id="type">
+                  <option value="person">Person</option>
+                  <option value="company">Company</option>
+                  <option value="credit_card">Credit Card</option>
+                </select>
+            </label>
+          </div>
+
+          <div class="pure-controls">
+            <button type="submit" class="pure-button pure-button-primary">
+              Add Node
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="add-transactions-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="text-center">Add Transactions</h2>
+        <form id="add_transaction" class="pure-form">
+          <div class="pure-control-group">
+            <label>
+              Date: <input type="text" id="date" />
+            </label>
+          </div>
+          
+          <div class="pure-control-group">
+            <label>
+              From: <input type="text" id="from" />
+            </label>
+          </div>
+          
+          <div class="pure-control-group">
+            <label>
+              To: <input type="text" id="to" />
+            </label>
+          </div>
+          
+          <div class="pure-control-group">
+            <label>
+              Amount: $<input type="text" id="amount" />
+            </label>
+          </div>
+
+          <div class="pure-controls">
+            <button type="submit" class="pure-button pure-button-primary">
+              Add Transaction
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  
     <!-- You can also require other files to run in this process -->
     <script>
       const { ipcRenderer } = require('electron');

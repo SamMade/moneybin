@@ -50,7 +50,7 @@ function updateChart() {
         .attr("width", d => d.x1 - d.x0)
         .attr("fill", d => color(d.name))
       .append("title")
-        .text(d => `${d.name}\n${`${f(d.value)} TWh`}`);
+        .text(d => `${d.name}\n${`$${f(d.value)}`}`);
 
     // LINKS
     const link = svg.append("g")
@@ -86,7 +86,7 @@ function updateChart() {
         .attr("stroke-width", d => Math.max(1, d.width));
 
     link.append("title")
-        .text(d => `${d.source.name} → ${d.target.name}\n${`${f(d.value)} TWh`}`);
+        .text(d => `${d.source.name} → ${d.target.name}\n${`$${f(d.value)}`}`);
 
     svg.append("g")
         .style("font", "10px sans-serif")

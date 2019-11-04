@@ -1,0 +1,9 @@
+nav {
+  background-color: var(--nav-bg-color);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+
+  & a.pure-menu-link {
+    color: var(--nav-bg-color-contrast);
+  }
+}

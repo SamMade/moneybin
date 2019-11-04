@@ -1,5 +1,25 @@
 'use strict';
 
+// Get the modal
+var addNodesModal = document.getElementById("add-nodes-modal");
+
+// When the user clicks on the button, open the modal
+document.getElementById("add-nodes-modal-button").onclick = function() {
+  addNodesModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+// addNodesModal.getElementsByClassName("close")[0].onclick = function() {
+//   addNodesModal.style.display = "none";
+// }
+
+// When the user clicks anywhere outside of the modal, close it
+window.addEventListener('click', function(event) {
+  if (event.target == addNodesModal) {
+    addNodesModal.style.display = "none";
+  }
+});
+
 /**
  * Receve Nodes
  */
