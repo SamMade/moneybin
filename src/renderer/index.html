@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>Moneybin</title>
+  </head>
+  <body>
+    <section class="filter">
+      <form id="filter">
+          <label>
+            Dates: <select id="type">
+                <option value="month">Current Month</option>
+                <option value="3month">Last 3 Months</option>
+                <option value="year">Current Year</option>
+                <option value="all">All</option>
+              </select>
+          </label>
+
+          <button type="submit" class="btn">
+            Filter
+          </button>
+        </form>
+    </section>
+
+    <section class="container">
+      <div class="columns">
+        <div class="column col-10">
+          <h2 class="text-center">Add Nodes</h2>
+          <form id="add_node">
+            <label>
+              Name: <input type="text" id="name" />
+            </label>
+
+            <label>
+              Type: <select id="type">
+                  <option value="person">Person</option>
+                  <option value="company">Company</option>
+                  <option value="credit_card">Credit Card</option>
+                </select>
+            </label>
+
+            <button type="submit" class="btn">
+              Add Node
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="columns">
+        <div class="column col-10">
+          <h2 class="text-center">Add Transactions</h2>
+          <form id="add_transaction">
+            <label>
+              Date: <input type="text" id="date" />
+            </label>
+
+            <label>
+              From: <input type="text" id="from" />
+            </label>
+
+            <label>
+              To: <input type="text" id="to" />
+            </label>
+
+            <label>
+              Amount: $<input type="text" id="amount" />
+            </label>
+
+            <button type="submit" class="btn">
+              Add Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="mySankey"></div>
+
+    <div class="container">
+      <div class="columns">
+        <div class="column col-10">
+          <h2 class="text-center">Nodes</h2>
+          <ul id="nodeList"></ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container">
+      <div class="columns">
+        <div class="column col-10">
+          <h2 class="text-center">Transactions</h2>
+          <ul id="transactionList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- You can also require other files to run in this process -->
+    <script>
+      const { ipcRenderer } = require('electron');
+    </script>
+    <script src="./nodes.js"></script>
+    <script src="./transactions.js"></script>
+    <script src="./sankey.js"></script>
+  </body>
+</html>
