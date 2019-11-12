@@ -1,48 +1,90 @@
 'use strict';
 
 // Get the modal
-var addNodesModal = document.getElementById("add-nodes-modal");
+const addNodesModal = document.getElementById("add-nodes-modal");
+const removeNodesModal = document.getElementById("remove-nodes-modal");
 
-// When the user clicks on the button, open the modal
+// Add Modal
 document.getElementById("add-nodes-modal-button").onclick = function() {
+  document.getElementById("nodeUpdateId").value = '';
+  addNodesModal.getElementsByTagName('h2')[0].innerHTML = 'Add Node';
   addNodesModal.style.display = "block";
 }
 
-// When the user clicks on <span> (x), close the modal
-// addNodesModal.getElementsByClassName("close")[0].onclick = function() {
-//   addNodesModal.style.display = "none";
-// }
+// Edit Modal
+function editNodesModalOpen(event) {
+  document.getElementById("name").value = event.target.parentElement.dataset.name;
+  document.getElementById("type").value = event.target.parentElement.dataset.type;
+  document.getElementById("nodeUpdateId").value = event.target.parentElement.dataset.id;
+  addNodesModal.getElementsByTagName('h2')[0].innerHTML = 'Edit Node';
+  addNodesModal.style.display = "block";
+}
 
 // When the user clicks anywhere outside of the modal, close it
 window.addEventListener('click', function(event) {
   if (event.target == addNodesModal) {
-    addNodesModal.style.display = "none";
+    editNodesModalClose();
+  }
+  if (event.target == removeNodesModal) {
+    removeNodesModalClose();
   }
 });
 
+function editNodesModalClose() {
+  document.getElementById("name").value = '';
+  document.getElementById("type").value = '';
+  document.getElementById("nodeUpdateId").value = '';
+  addNodesModal.style.display = "none";
+}
+
+// Remove Node
+function removeNodesModalOpen(event) {
+  removeNodesModal.getElementsByClassName('removeName')[0].innerHTML = event.target.parentElement.dataset.name;
+  removeNodesModal.getElementsByClassName('removeName')[0].dataset.id = event.target.parentElement.dataset.id;
+  removeNodesModal.style.display = "block";
+}
+/** 
+ * Delete Node Handler
+ */
+function deleteNode() {
+  const id = removeNodesModal.getElementsByClassName('removeName')[0].dataset.id;
+  if (id) {
+    ipcRenderer.send('remove-node', id);
+  }
+}
+function removeNodesModalClose(event) {
+  removeNodesModal.getElementsByClassName('removeName')[0].innerHTML = '';
+  removeNodesModal.getElementsByClassName('removeName')[0].dataset.id = null;
+  removeNodesModal.style.display = "none";
+}
+
 /**
- * Receve Nodes
+ * Receive Nodes
  */
 ipcRenderer.on('nodes', (event, nodes) => {
   console.log('renderer - nodes');
+  mbNodes = nodes;
   
   // get the nodesList ul
   const nodesList = document.getElementById('nodeList')
 
   // create html string
   const nodeItems = nodes.reduce((html, node) => {
-    html += `<li class="node-item" data-id="${node.id}">${JSON.stringify(node)}</li>`
+    html += `<li class="node-item" data-id="${node.id}" data-name="${node.name}" data-type="${node.type}">
+      ${JSON.stringify(node)}
+      <button type="button" onclick="editNodesModalOpen(event)">Edit</button>
+      <button type="button" onclick="removeNodesModalOpen(event)">Delete</button>
+    </li>`;
 
-    return html
-  }, '')
+    return html;
+  }, '');
 
   // set list html to the node items
-  nodesList.innerHTML = nodeItems
+  nodesList.innerHTML = nodeItems;
 
-  // add click handlers to delete the clicked node
-  nodeList.querySelectorAll('.node-item').forEach(item => {
-    item.addEventListener('click', deleteNode)
-  })
+  // reset modals
+  editNodesModalClose();
+  removeNodesModalClose();
 });
 
 /**
@@ -64,11 +106,3 @@ document.getElementById('add_node').addEventListener('submit', (evt) => {
   // reset input
   evt.target[0].value = '';
 });
-
-/** 
- * Delete Node Handler
- */
-function deleteNode(evt) {
-  const id = evt.target.dataset.id;
-  ipcRenderer.send('remove-node', id);
-}

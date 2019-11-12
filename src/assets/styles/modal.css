@@ -20,6 +20,10 @@
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
+.modal-action {
+  margin-top: 1rem;
+}
+
 /* The Close Button */
 .close {
   color: #aaa;

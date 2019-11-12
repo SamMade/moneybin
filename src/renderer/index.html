@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../assets/styles/index.css">
   </head>
   <body>
+    <!-- NAVIGATION -->
     <nav class="pure-menu pure-menu-horizontal">
         <ul class="pure-menu-list">
           <li class="pure-menu-item"><a href="#" id="add-transactions-modal-button" class="pure-menu-link">Add Transaction</a></li>
@@ -17,6 +18,7 @@
         </ul>
     </nav>
 
+    <!-- FILTER -->
     <section class="filter">
       <form id="filter">
           <label>
@@ -34,8 +36,10 @@
         </form>
     </section>
 
+    <!-- SANKEY GRAPH -->
     <div id="mySankey"></div>
 
+    <!-- NODES LIST -->
     <div class="container">
       <div class="columns">
         <div class="column col-10">
@@ -45,6 +49,7 @@
       </div>
     </div>
     
+    <!-- TRANSACTIONS LIST -->
     <div class="container">
       <div class="columns">
         <div class="column col-10">
@@ -54,78 +59,121 @@
       </div>
     </div>
 
+    <!-- ADD NODES MODAL -->
     <div id="add-nodes-modal" class="modal">
       <div class="modal-content">
         <h2 class="text-center">Add Nodes</h2>
-        <form id="add_node" class="pure-form">
+        <form id="add_node" class="pure-form pure-form-aligned">
           <div class="pure-control-group">
-            <label>
-              Name: <input type="text" id="name" />
-            </label>
+            <label for="name">Name:</label>
+            <input type="text" id="name" required />
           </div>
 
           <div class="pure-control-group">
-            <label>
-              Type: <select id="type">
-                  <option value="person">Person</option>
-                  <option value="company">Company</option>
-                  <option value="credit_card">Credit Card</option>
-                </select>
-            </label>
+            <label for="type">Type:</label>
+            <select id="type">
+              <option value="person">Person</option>
+              <option value="company">Company</option>
+              <option value="credit_card">Credit Card</option>
+            </select>
           </div>
 
-          <div class="pure-controls">
+          <input type="text" id="nodeUpdateId" hidden />
+
+          <div class="modal-action">
             <button type="submit" class="pure-button pure-button-primary">
-              Add Node
+              Submit
+            </button>
+            <button type="button" class="pure-button pure-button-secondary" onclick="editNodesModalClose()">
+              Cancel
             </button>
           </div>
         </form>
       </div>
     </div>
 
+    <!-- Remove Node Modal -->
+    <div id="remove-nodes-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="text-center">Remove Node</h2>
+        <p>Are you sure you want to remove <span class="removeName"></span>?</p>
+        <div class="modal-action">
+          <button type="button" class="pure-button button-error" onclick="deleteNode()">
+            Submit
+          </button>
+          <button type="button" class="pure-button pure-button-secondary" onclick="removeNodesModalClose()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD TRANSACTION MODAL -->
     <div id="add-transactions-modal" class="modal">
       <div class="modal-content">
-        <h2 class="text-center">Add Transactions</h2>
-        <form id="add_transaction" class="pure-form">
+        <h2 class="text-center">Add Transaction</h2>
+        <form id="add_transaction" class="pure-form pure-form-aligned">
           <div class="pure-control-group">
-            <label>
-              Date: <input type="text" id="date" />
-            </label>
+            <label for="date">Date:</label>
+            <input type="text" id="date" required />
+          </div>
+          
+          <div class="pure-control-group autocomplete">
+            <label for="from">From:</label>
+            <input type="text" id="from" required />
+            <input type="hidden" id="fromId"/>
+          </div>
+          
+          <div class="pure-control-group autocomplete">
+            <label for="to">To:</label> 
+            <input type="text" id="to" required />
+            <input type="hidden" id="toId"/>
           </div>
           
           <div class="pure-control-group">
-            <label>
-              From: <input type="text" id="from" />
-            </label>
-          </div>
-          
-          <div class="pure-control-group">
-            <label>
-              To: <input type="text" id="to" />
-            </label>
-          </div>
-          
-          <div class="pure-control-group">
-            <label>
-              Amount: $<input type="text" id="amount" />
-            </label>
+            <label for="amount">Amount: $</label>
+            <input type="text" id="amount" required />
           </div>
 
-          <div class="pure-controls">
+          <input type="text" id="transactionUpdateId" hidden />
+
+          <div class="modal-action">
             <button type="submit" class="pure-button pure-button-primary">
-              Add Transaction
+              Submit
+            </button>
+            <button type="button" class="pure-button pure-button-secondary" onclick="editTransactionsModalClose()">
+              Cancel
             </button>
           </div>
         </form>
       </div>
     </div>
-  
+
+    <!-- Remove Transaction Modal -->
+    <div id="remove-transactions-modal" class="modal">
+      <div class="modal-content">
+        <h2 class="text-center">Remove Transaction</h2>
+        <p>Are you sure you want to remove transaction on <span class="removeName"></span>?</p>
+        <div class="modal-action">
+          <button type="button" class="pure-button button-error" onclick="deleteTransaction()">
+            Submit
+          </button>
+          <button type="button" class="pure-button pure-button-secondary" onclick="removeTransactionsModalClose()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- You can also require other files to run in this process -->
     <script>
       const { ipcRenderer } = require('electron');
+
+      let mbTransactions, mbNodes;
     </script>
     <script src="./nodes.js"></script>
     <script src="./transactions.js"></script>
     <script src="./sankey.js"></script>
+    <script src="./autocomplete.js"></script>
   </body>
 </html>

@@ -117,7 +117,7 @@ ipcMain.on('remove-node', async (event, removedId) => {
   await NodesService.removeNode({
     id: removedId,
   });
-  console.info('Removed Node from UI');
+  console.info('Removed Node from DB');
 
   // remove from UI
   const index = nodes.findIndex((item) => item.id == removedId);
