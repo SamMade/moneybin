@@ -93,7 +93,7 @@ ipcRenderer.on('nodes', (event, nodes) => {
 document.getElementById('add_node').addEventListener('submit', (evt) => {
   // prevent default refresh functionality of forms
   evt.preventDefault()
-
+console.log('renderer - adding node')
   // input on the form
   const payload = {
     name: evt.target[0].value,

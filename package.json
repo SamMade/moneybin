@@ -2,7 +2,7 @@
   "name": "moneybin",
   "version": "0.0.1",
   "description": "",
-  "main": "src/main.js",
+  "main": "public/electron.js",
   "build": {
     "appId": "com.electron.moneybin",
     "mac": {
@@ -10,23 +10,49 @@
     }
   },
   "scripts": {
-    "start": "electron .",
-    "postinstall": "electron-builder install-app-deps",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "electron-build": "CSC_IDENTITY_AUTO_DISCOVERY=false build --mac --win",
+    "start": "cross-env BROWSER=none NODE_ENV=local concurrently \"npm:react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "debug": "cross-env BROWSER=none NODE_ENV=local concurrently \"npm:react-start\" \"wait-on http://localhost:3000 && electron . --debug\"",
+    "build": "react-build && electron-build",
+    "postinstall": "electron-builder install-app-deps"
   },
   "author": "",
   "license": "ISC",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "devDependencies": {
-    "electron": "^7.0.0",
-    "electron-builder": "^22.1.0"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
+    "electron": "^7.2.1",
+    "electron-builder": "^22.1.0",
+    "wait-on": "^4.0.1"
   },
   "dependencies": {
-    "d3": "^5.12.0",
-    "d3-sankey": "^0.12.3",
+    "10": "0.0.1",
     "lodash": "^4.17.15",
     "purecss": "^1.0.1",
-    "sqlite3": "^4.1.0"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.1",
+    "sqlite3": "^4.1.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
