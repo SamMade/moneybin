@@ -1,19 +1,13 @@
 'use strict';
 
-const path = require('path');
-const Schema = require('./services/storage/sql/init');
-const Storage = require('./services/storage/storage');
-
-global.__basedir = path.resolve(__dirname, '..');
-const dbPath = path.resolve(global.__basedir, './moneybin.db');
-const storage = new Storage(dbPath);
+const Storage = require('./main-process/services/storage/storage');
+const storage = new Storage();
 
 module.exports = {
   init: async function setup() {
-    console.log('db setup');
-  
-    const createTables = Schema.create.map((query) => storage.run(query).then(() => { console.log(`Query ran: ${query}`) }));
-    return await Promise.all(createTables);
+    await storage.init();
+
+    console.log('Storage init ...complete');
   },
   close: storage.close,
   getTransactions: function() {
@@ -42,9 +36,11 @@ module.exports = {
       'INSERT INTO Nodes(name, type) VALUES(?, ?)',
       [name, type]
     )
-    return await storage.get(
+    const {"last_insert_rowid()":id} = await storage.get(
       'SELECT last_insert_rowid()'
     );
+
+    return id;
   },
   removeNode: function(id) {
     return storage.run(

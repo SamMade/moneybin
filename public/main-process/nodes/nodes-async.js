@@ -1,42 +1,38 @@
 const { ipcMain } = require('electron');
+const NodesService = require('./nodes');
+const logger = require('../../../shared/services/logger/logger');
 
-function emitNode() {
-  console.log('Event - Nodes Updated');
+function emitNode(event) {
+  logger.debug('Event - Nodes Updated');
   event.sender.send('nodes', nodes);
 }
 
 ipcMain.on('add-node', async (event, node) => {
-  console.log('Add Node', node);
+  logger.debug('Add Node', node);
+
   // add to db
-  const {"last_insert_rowid()":id} = await NodesService.addNode({
+  const { "last_insert_rowid()":id } = await NodesService.addNode({
     name: node.name,
     type: node.type,
   });
-  console.info('Added Node to DB');
 
-  // add to UI
-  nodes.push({
-    ...node,
-    id,
-  });
-
-  // announce
-  emitNode(event);
+  logger.info('Added Node to DB');
+  return id;
 });
 
 ipcMain.on('remove-node', async (event, removedId) => {
-  console.log('Remove Node', removedId);
+  logger.debug('Remove Node', removedId);
   // remove from db
   await NodesService.removeNode({
     id: removedId,
   });
-  console.info('Removed Node from DB');
+  logger.info('Removed Node from DB');
 
   // remove from UI
   const index = nodes.findIndex((item) => item.id == removedId);
   if (index !== -1) { 
     nodes.splice(index, 1);
-    console.info('Removed Node from UI state');
+    logger.info('Removed Node from UI state');
   }
 
   // announce

@@ -1,6 +1,7 @@
+@import "~purecss/build/pure-min.css";
 @import "./themes/ponyo.css";
 
-@import "main.css";
+@import "globals.css";
 @import "navigation.css";
 @import "modal.css";
 @import "forms.css";

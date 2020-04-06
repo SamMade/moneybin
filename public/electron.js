@@ -3,12 +3,10 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 
 // dependencies
-// const initializeDataStore = require('./dataStore');
+global.__basedir = path.resolve(__dirname, '../');
+const initializeDataStore = require('./dataStore');
+const NodesService = new (require('./main-process/nodes/nodes'))();
 // const TransactionsService = require('./transactions/transactions');
-// const NodesService = require('./nodes/nodes');
-
-// let nodes; // entities
-// let transactions; // relationships
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -56,8 +54,13 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  // database
-  // await initializeDataStore.init();
+  await initializeDataStore.init();
+
+  const initPromises = [
+    NodesService.init(),
+  ];
+
+  await Promise.all(initPromises);
 
   createWindow();
 })
@@ -72,7 +75,7 @@ app.on('window-all-closed', function () {
 })
 
 app.on('before-quit', () => {
-  // initializeDataStore.close();
+  initializeDataStore.close();
   console.log('Database connection closed.');
 })
 
