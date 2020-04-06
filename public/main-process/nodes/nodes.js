@@ -3,6 +3,7 @@ const logger = require('../../../shared/services/logger/logger');
 
 const nodesGetAll = require('./nodes-getAll');
 const nodesAdd = require('./nodes-add');
+const nodesRemove = require('./nodes-remove');
 
 module.exports = class Nodes {
   constructor() {
@@ -10,6 +11,7 @@ module.exports = class Nodes {
 
     ipcMain.on('nodes-getAll', this.getAllNodes.bind(this));
     ipcMain.on('nodes-add', this.addNode.bind(this));
+    ipcMain.on('nodes-remove', this.removeNode.bind(this));
 
     logger.info('Service: Nodes ...ready');
   }
@@ -41,9 +43,25 @@ module.exports = class Nodes {
       });
   }
 
-  // removeNode({id}) {
-  //   return dataStore.removeNode(id);
-  // }
+  removeNode(event, request) {
+    logger.debug('Node to remove: ', request);
+    const { uid, nodeId } = request;
+    
+    const foundIndex = this.nodes.findIndex((node) => node.id === nodeId);
+
+    if (foundIndex !== -1) {
+      nodesRemove(nodeId)
+        .then(() => {
+          const copy = Array.from(this.nodes);
+          copy.splice(foundIndex, 1);
+          this.nodes = copy;
+
+          logger.debug(`Event - Node Removed (${uid})`);
+          event.reply('nodes-getAll-reply', this.nodes);
+          event.reply('nodes-remove-reply', uid);
+        });
+    }
+  }
 
   getAllNodes(event) {
     logger.debug('Get Nodes');

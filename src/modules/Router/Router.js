@@ -24,15 +24,13 @@ export default function Router({ children }) {
     return () => { historyListener.current() };
   }, []);
 
-const clickHandler = (path) => {
-  history.push(path);
-}
+  const clickHandler = (path) => {
+    history.push(path);
+  }
 
-return (<div>
-  Bye Bye router
-  <button onClick={() => clickHandler('/app')}>Click Me APP</button>
-  <button onClick={() => clickHandler('/welcome')}>Click Me Welcome</button>
-
-  {locationComponent}
-</div>)
+  return (
+    <div>
+      {locationComponent}
+    </div>
+  );
 }

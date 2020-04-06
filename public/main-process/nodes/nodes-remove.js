@@ -1,6 +1,6 @@
 const dataStore = require('../../dataStore');
 
-module.exports = function nodesRemove({ name, type }) {
+module.exports = function nodesRemove(id) {
   // add to db
-  return dataStore.removeNode(name, type);
+  return dataStore.removeNode(id);
 }

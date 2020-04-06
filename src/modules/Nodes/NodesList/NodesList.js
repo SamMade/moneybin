@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NodesServices from '../services';
-
+import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton'
 
 import { uid } from 'react-uid';
 
@@ -28,7 +28,7 @@ export default function NodesList() {
         {
           allNodes.map((node, index) => (
             <li key={uid(node, index)}>
-              {node.name} - {node.type}
+              {node.name} - {node.type} <NodesRemoveButton id={node.id} />
             </li>
           ))
         }
