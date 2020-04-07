@@ -4,9 +4,11 @@ const path = require('path');
 
 // dependencies
 global.__basedir = path.resolve(__dirname, '../');
-const initializeDataStore = require('./dataStore');
+const sqlite3Adapter = require('./main-process/services/storage/sql/sql');
+const Storage = require('./main-process/services/storage/storage');
+
 const NodesService = new (require('./main-process/nodes/nodes'))();
-// const TransactionsService = require('./transactions/transactions');
+const TransactionsService = new (require('./main-process/transactions/transactions'))();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -54,10 +56,12 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  await initializeDataStore.init();
+
+  await Storage.init(sqlite3Adapter);
 
   const initPromises = [
     NodesService.init(),
+    TransactionsService.init(),
   ];
 
   await Promise.all(initPromises);
@@ -75,7 +79,7 @@ app.on('window-all-closed', function () {
 })
 
 app.on('before-quit', () => {
-  initializeDataStore.close();
+  Storage.close();
   console.log('Database connection closed.');
 })
 
@@ -89,51 +93,6 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-// function emitNode() {
-//   console.log('Event - Nodes Updated');
-//   mainWindow.send('nodes', nodes);
-// }
-
-// ipcMain.on('add-node', async (event, node) => {
-//   console.log('Add Node', node);
-//   // add to db
-//   const {"last_insert_rowid()":id} = await NodesService.addNode({
-//     name: node.name,
-//     type: node.type,
-//   });
-//   console.info('Added Node to DB');
-
-//   // add to UI
-//   nodes.push({
-//     ...node,
-//     id,
-//   });
-
-//   // announce
-//   emitNode();
-// });
-
-// ipcMain.on('remove-node', async (event, removedId) => {
-//   console.log('Remove Node', removedId);
-//   // remove from db
-//   await NodesService.removeNode({
-//     id: removedId,
-//   });
-//   console.info('Removed Node from DB');
-
-//   // remove from UI
-//   const index = nodes.findIndex((item) => item.id == removedId);
-//   if (index !== -1) { 
-//     nodes.splice(index, 1);
-//     console.info('Removed Node from UI state');
-//   }
-
-//   // announce
-//   emitNode();
-// });
-
-// // ---------------
 
 // function emitTransaction() {
 //   console.log('Event - Transactions Updated');

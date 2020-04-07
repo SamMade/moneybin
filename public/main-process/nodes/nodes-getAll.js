@@ -1,5 +1,7 @@
-const dataStore = require('../../dataStore');
+const storage = require('../services/storage/storage');
+const logger = require('../../../shared/services/logger/logger');
 
 module.exports = async function nodesGetAll() {
-  return await dataStore.getNodes();
+  logger.debug('Get Nodes');
+  return await storage.nodesGetAll();
 }

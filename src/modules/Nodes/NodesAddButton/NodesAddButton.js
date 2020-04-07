@@ -1,72 +1,49 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { uid } from 'react-uid';
 import NodesServices from '../services';
 
-const { ipcRenderer } = window.require('electron');
-
 export default function NodesAddButton() {
-  const receipts = useRef([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [addName, setAddName] = useState('');
   const [addType, setAddType] = useState('Person');
 
-  const confirmOrAdd = (type, uid) => {
-    const isFound = receipts.current.findIndex((receipt) => receipt === uid);
-    
-    if (isFound !== -1) {
-      receipts.current = [].concat(receipts.current, [uid]);
-      return;
-    }
-
-    const copyArray = Array.from(receipts.current);
-    copyArray.splice(isFound, 1);
-    receipts.current = copyArray;
-    setIsConfirmed(true);
-  }
-
-  const addListener = (event, confirmation) => {
-    console.info(`Confirmation received for ${confirmation}`);
-    confirmOrAdd('received', confirmation);
-  };
-
-  useEffect(() => {
-    ipcRenderer.on('nodes-add-reply', addListener);
-
-    return () => {
-      ipcRenderer.removeListener('nodes-add-reply', addListener);
-    };
-  }, []);
-
-  const clickHandler = (event) => {
+  const clickHandler = async (event) => {
     event.preventDefault();
     console.info('NodesAddButton - clicked');
     setIsConfirmed(false);
-    const receipt = NodesServices.addNodes({
+    const receipt = await NodesServices.addNodes({
       name: addName,
       type: addType,
     });
-    confirmOrAdd('sent', receipt);
+    setIsConfirmed(true);
   }
 
   return (
-    <>
-      <div>
-        <form onSubmit={clickHandler}>
-          <label>
-            Name: <input type="text" value={addName} onChange={(event) => {setAddName(event.target.value)}} />
+    <div>
+      <form className="pure-form pure-form-aligned" onSubmit={clickHandler}>
+        <div className="pure-control-group">
+          <label htmlFor={uid('name')}>
+            Name: 
           </label>
-          <label>
+          <input id={uid('name')} type="text" value={addName} onChange={(event) => {setAddName(event.target.value)}} />
+        </div>
+        
+        <div className="pure-control-group">
+          <label htmlFor={uid('type')}>
             Type: 
-            <select value={addType} onChange={(event) => {setAddType(event.target.value)}}>
-              <option value="Person">Person</option>
-              <option value="Bank">Bank</option>
-              <option value="Credit Card">Credit Card</option>
-            </select>
-            
           </label>
-          <button type="submit">Add Node</button>
-        </form>
-        { (isConfirmed) && <span>...Added</span>}
-      </div>
-    </>
+          <select id={uid('type')} value={addType} onChange={(event) => {setAddType(event.target.value)}}>
+            <option value="Person">Person</option>
+            <option value="Bank">Bank</option>
+            <option value="Credit Card">Credit Card</option>
+          </select>
+        </div>
+
+        <div className="pure-controls">
+          <button type="submit" className="pure-button pure-button-primary">Add Node</button>
+        </div>
+      </form>
+      { (isConfirmed) && <span>...Added</span>}
+    </div>
   );
 }

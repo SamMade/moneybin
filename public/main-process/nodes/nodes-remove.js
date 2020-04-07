@@ -1,6 +1,17 @@
-const dataStore = require('../../dataStore');
+const storage = require('../services/storage/storage');
+const logger = require('../../../shared/services/logger/logger');
 
-module.exports = function nodesRemove(id) {
+module.exports = async function nodesRemove(request) {
+  logger.debug('Node to remove: ', request);
+  const { uid, nodeId } = request;
+
+  if (!nodeId) {
+    throw new Error('Missing required field (nodeId)');
+  }
+
   // add to db
-  return dataStore.removeNode(id);
+  await storage.nodesRemove(nodeId);
+  logger.debug(`Event - Node Removed (${nodeId})`);
+
+  return nodeId;
 }

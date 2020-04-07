@@ -10,8 +10,8 @@ module.exports = class Nodes {
     this.nodes = [];
 
     ipcMain.on('nodes-getAll', this.getAllNodes.bind(this));
-    ipcMain.on('nodes-add', this.addNode.bind(this));
-    ipcMain.on('nodes-remove', this.removeNode.bind(this));
+    ipcMain.handle('nodes-add', this.addNode.bind(this));
+    ipcMain.handle('nodes-remove', this.removeNode.bind(this));
 
     logger.info('Service: Nodes ...ready');
   }
@@ -24,47 +24,36 @@ module.exports = class Nodes {
     return;
   }
 
-  addNode(event, request) {
-    logger.debug('Node to add: ', request);
-    const { uid, ...node } = request;
+  async addNode(event, request) {
+    // try {
+      const newNode = await nodesAdd(request);
+
+      this.nodes.push(newNode);
   
-    nodesAdd(node)
-      .then((id) => {
-        const newNode = {
-          ...node,
-          id,
-        };
-
-        this.nodes.push(newNode);
-
-        logger.debug(`Event - Node added (${uid})`);
-        event.reply('nodes-getAll-reply', this.nodes);
-        event.reply('nodes-add-reply', uid);
-      });
+      event.sender.send('nodes-getAll-reply', this.nodes);
+      return newNode.id;
+    // } catch (e) {
+    //   return e;
+    // }
   }
 
-  removeNode(event, request) {
-    logger.debug('Node to remove: ', request);
-    const { uid, nodeId } = request;
-    
-    const foundIndex = this.nodes.findIndex((node) => node.id === nodeId);
-
-    if (foundIndex !== -1) {
-      nodesRemove(nodeId)
-        .then(() => {
-          const copy = Array.from(this.nodes);
-          copy.splice(foundIndex, 1);
-          this.nodes = copy;
-
-          logger.debug(`Event - Node Removed (${uid})`);
-          event.reply('nodes-getAll-reply', this.nodes);
-          event.reply('nodes-remove-reply', uid);
-        });
+  async removeNode(event, request) {
+    const isFoundIndex = this.nodes.findIndex((node) => node.id === nodeId);
+    if (isFoundIndex === -1) {
+      return null;
     }
+
+    const nodeId = await nodesRemove(request);
+
+    const copy = Array.from(this.nodes);
+    copy.splice(isFoundIndex, 1);
+    this.nodes = copy;
+  
+    event.sender.send('nodes-getAll-reply', this.nodes);
+    return nodeId;
   }
 
   getAllNodes(event) {
-    logger.debug('Get Nodes');
     event.reply('nodes-getAll-reply', this.nodes);
   }
 }

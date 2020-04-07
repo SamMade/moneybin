@@ -1,17 +1,39 @@
-const DB = require('./sql/sql');
+const logger = require('../../../../shared/services/logger/logger');
 
-/**
- * Abstract class
- */
-module.exports = class Storage {
-  constructor(){
-    this.db = new DB();
-    this.init = this.db.init;
-    this.run = this.db.run;
-    this.all = this.db.all;
-    this.get = this.db.get;
-    this.each = this.db.each;
-    this.exec = this.db.exec;
-    this.close = this.db.close;
+class Storage {
+  constructor() {
+    this.nodesAdd = null;
+    this.nodesRemove = null;
+    this.nodesGetAll = null;
+    this.transactionsAdd = null;
+    this.transactionsRemove = null;
+    this.transactionsGetAll = null;
+    this.close = null;
+  }
+
+  async init(adapter, ...params) {
+    if (!adapter) {
+      throw new Error('Missing Storage Adapter');
+    }
+    
+    const adapterInstance = new adapter(params);
+    
+    this.nodesAdd = adapterInstance.nodesAdd;
+    this.nodesRemove = adapterInstance.nodesRemove;
+    this.nodesGetAll = adapterInstance.nodesGetAll;
+    this.transactionsAdd = adapterInstance.transactionsAdd;
+    this.transactionsRemove = adapterInstance.transactionsRemove;
+    this.transactionsGetAll = adapterInstance.transactionsGetAll;
+    this.close = adapterInstance.close;
+
+    const adapterInit = await adapterInstance.init();
+
+    logger.info('Storage Adapter Connected');
+    return adapterInit;
   }
 }
+
+/**
+ * Singleton
+ */
+module.exports = new Storage();
