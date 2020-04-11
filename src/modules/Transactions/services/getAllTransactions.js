@@ -1,5 +1,5 @@
 const { ipcRenderer } = window.require('electron');
 
-export default async function getAllNodes() {
-  await ipcRenderer.send('nodes-getAll');
+export default async function getAllTransactions() {
+  await ipcRenderer.send('transactions-getAll');
 };

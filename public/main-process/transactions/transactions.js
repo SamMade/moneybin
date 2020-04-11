@@ -25,16 +25,16 @@ module.exports = class Transactions {
   }
 
   async addTransaction(event, request) {
-    // try {
+    try {
       const newTransaction = await transactionsAdd(request);
 
       this.transactions.push(newTransaction);
   
       event.sender.send('transactions-getAll-reply', this.transactions);
       return newTransaction.id;
-    // } catch (e) {
-    //   return e;
-    // }
+    } catch (e) {
+      return e;
+    }
   }
 
   async removeTransaction(event, request) {

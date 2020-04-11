@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import TransactionsServices from '../services';
 // import TransactionsRemoveButton from '../TransactionsRemoveButton/TransactionsRemoveButton'
 
@@ -28,7 +29,9 @@ export default function TransactionsList() {
         {
           allTransactions.map((node, index) => (
             <li key={uid(node, index)}>
-              {node.name} - {node.type} 
+              <span title={moment(node.date).toString()}>{moment(node.date).fromNow()}</span>
+               - 
+              <span>{node.amount}</span>
             </li>
           ))
         }

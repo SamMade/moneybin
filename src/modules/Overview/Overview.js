@@ -7,7 +7,7 @@ import NodesAddButton from '../Nodes/NodesAddButton/NodesAddButton';
 import NodesList from '../Nodes/NodesList/NodesList';
 
 import TransactionsAddButton from '../Transactions/TransactionsAddButton/TransactionsAddButton';
-// import TransactionsList from '../Transactions/TransactionsList/TransactionsList';
+import TransactionsList from '../Transactions/TransactionsList/TransactionsList';
 
 export default function Overview() {
 
@@ -26,10 +26,10 @@ export default function Overview() {
           <h2>Nodes</h2>
           <NodesList />
         </div>
-        {/* <div className="pure-u-1-2">
+        <div className="pure-u-1-2">
           <h2>Transactions</h2>
           <TransactionsList />
-        </div> */}
+        </div>
       </div>
     </Layout>
   )

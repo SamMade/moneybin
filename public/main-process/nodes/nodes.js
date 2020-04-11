@@ -4,6 +4,7 @@ const logger = require('../../../shared/services/logger/logger');
 const nodesGetAll = require('./nodes-getAll');
 const nodesAdd = require('./nodes-add');
 const nodesRemove = require('./nodes-remove');
+const nodesNameAutocomplete = require('./nodes-getName-autocomplete');
 
 module.exports = class Nodes {
   constructor() {
@@ -12,6 +13,7 @@ module.exports = class Nodes {
     ipcMain.on('nodes-getAll', this.getAllNodes.bind(this));
     ipcMain.handle('nodes-add', this.addNode.bind(this));
     ipcMain.handle('nodes-remove', this.removeNode.bind(this));
+    ipcMain.handle('nodes-getName-autocomplete', this.getNameAutocomplete.bind(this));
 
     logger.info('Service: Nodes ...ready');
   }
@@ -25,16 +27,16 @@ module.exports = class Nodes {
   }
 
   async addNode(event, request) {
-    // try {
+    try {
       const newNode = await nodesAdd(request);
 
       this.nodes.push(newNode);
   
       event.sender.send('nodes-getAll-reply', this.nodes);
       return newNode.id;
-    // } catch (e) {
-    //   return e;
-    // }
+    } catch (e) {
+      return e;
+    }
   }
 
   async removeNode(event, request) {
@@ -55,5 +57,9 @@ module.exports = class Nodes {
 
   getAllNodes(event) {
     event.reply('nodes-getAll-reply', this.nodes);
+  }
+
+  getNameAutocomplete(event, request) {
+    return nodesNameAutocomplete(request);
   }
 }

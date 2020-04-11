@@ -5,6 +5,7 @@ class Storage {
     this.nodesAdd = null;
     this.nodesRemove = null;
     this.nodesGetAll = null;
+    this.nodesGetNameAutocomplete = null;
     this.transactionsAdd = null;
     this.transactionsRemove = null;
     this.transactionsGetAll = null;
@@ -21,6 +22,7 @@ class Storage {
     this.nodesAdd = adapterInstance.nodesAdd;
     this.nodesRemove = adapterInstance.nodesRemove;
     this.nodesGetAll = adapterInstance.nodesGetAll;
+    this.nodesGetNameAutocomplete = adapterInstance.nodesGetNameAutocomplete;
     this.transactionsAdd = adapterInstance.transactionsAdd;
     this.transactionsRemove = adapterInstance.transactionsRemove;
     this.transactionsGetAll = adapterInstance.transactionsGetAll;

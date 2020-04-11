@@ -10,6 +10,7 @@ const close = require('./methods/close');
 const nodesAdd = require('./methods/nodes-add');
 const nodesRemove = require('./methods/nodes-remove');
 const nodesGetAll = require('./methods/nodes-getAll');
+const nodesGetNameAutocomplete = require('./methods/nodes-getName-autocomplete');
 const transactionsAdd = require('./methods/transactions-add');
 const transactionsRemove = require('./methods/transactions-remove');
 const transactionsGetAll = require('./methods/transactions-getAll');
@@ -27,6 +28,7 @@ module.exports = class SqlStorage {
     this.nodesAdd = (...args) => nodesAdd(this.db, ...args);
     this.nodesRemove = (...args) => nodesRemove(this.db, ...args);
     this.nodesGetAll = (...args) => nodesGetAll(this.db, ...args);
+    this.nodesGetNameAutocomplete = (...args) => nodesGetNameAutocomplete(this.db, ...args);
     this.transactionsAdd = (...args) => transactionsAdd(this.db, ...args);
     this.transactionsRemove = (...args) => transactionsRemove(this.db, ...args);
     this.transactionsGetAll = (...args) => transactionsGetAll(this.db, ...args);

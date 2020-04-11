@@ -1,4 +1,5 @@
 const storage = require('../services/storage/storage');
+const moment = require('moment');
 const logger = require('../../../shared/services/logger/logger');
 
 module.exports = async function transactionsAdd(request) {
@@ -19,6 +20,10 @@ module.exports = async function transactionsAdd(request) {
 
   if (!transaction.date) {
     throw new Error('Missing required field (date)');
+  }
+
+  if (!moment(transaction.date).isValid()) {
+    throw new Error('Date Invalid');
   }
 
   const id = await storage.transactionsAdd(transaction.name, transaction.type);
