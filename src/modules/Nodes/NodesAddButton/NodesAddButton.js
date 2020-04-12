@@ -1,49 +1,27 @@
 import React, { useState } from 'react';
-import { uid } from 'react-uid';
-import NodesServices from '../services';
 
-export default function NodesAddButton() {
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const [addName, setAddName] = useState('');
-  const [addType, setAddType] = useState('Person');
+import NodesAddForm from '../NodesAddForm/NodesAddForm';
+import Button from '../../../shared/Button/Button';
+import Modal from '../../../shared/Modal/Modal';
 
-  const clickHandler = async (event) => {
-    event.preventDefault();
-    console.info('NodesAddButton - clicked');
-    setIsConfirmed(false);
-    const receipt = await NodesServices.addNodes({
-      name: addName,
-      type: addType,
-    });
-    setIsConfirmed(true);
+export default function NodesAddButton({ className }) {
+  const [isShown, setIsShown] = useState(false);
+
+  const toggleModal = () => {
+    setIsShown(!isShown);
   }
 
   return (
-    <div>
-      <form className="pure-form pure-form-aligned" onSubmit={clickHandler}>
-        <div className="pure-control-group">
-          <label htmlFor={uid('name')}>
-            Name: 
-          </label>
-          <input id={uid('name')} type="text" value={addName} onChange={(event) => {setAddName(event.target.value)}} />
-        </div>
-        
-        <div className="pure-control-group">
-          <label htmlFor={uid('type')}>
-            Type: 
-          </label>
-          <select id={uid('type')} value={addType} onChange={(event) => {setAddType(event.target.value)}}>
-            <option value="Person">Person</option>
-            <option value="Bank">Bank</option>
-            <option value="Credit Card">Credit Card</option>
-          </select>
-        </div>
-
-        <div className="pure-controls">
-          <button type="submit" className="pure-button pure-button-primary">Add Node</button>
-        </div>
-      </form>
-      { (isConfirmed) && <span>...Added</span>}
-    </div>
+    <>
+      <Button className={className} onClick={toggleModal}>Add Node</Button>
+      {
+        (isShown
+          && (
+            <Modal closeHandler={toggleModal}>
+              <NodesAddForm />
+            </Modal>
+          ))
+      }
+    </>
   );
 }

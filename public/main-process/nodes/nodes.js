@@ -1,16 +1,16 @@
 const { ipcMain } = require('electron');
-const logger = require('../../../shared/services/logger/logger');
+const logger = require('../services/logger/logger');
 
-const nodesGetAll = require('./nodes-getAll');
+const nodesGet = require('./nodes-get');
+const nodesGetMany = require('./nodes-getMany');
 const nodesAdd = require('./nodes-add');
 const nodesRemove = require('./nodes-remove');
 const nodesNameAutocomplete = require('./nodes-getName-autocomplete');
 
 module.exports = class Nodes {
   constructor() {
-    this.nodes = [];
-
-    ipcMain.on('nodes-getAll', this.getAllNodes.bind(this));
+    ipcMain.handle('nodes-getMany', this.getManyNodes.bind(this));
+    ipcMain.handle('nodes-get', this.getNode.bind(this));
     ipcMain.handle('nodes-add', this.addNode.bind(this));
     ipcMain.handle('nodes-remove', this.removeNode.bind(this));
     ipcMain.handle('nodes-getName-autocomplete', this.getNameAutocomplete.bind(this));
@@ -19,9 +19,6 @@ module.exports = class Nodes {
   }
 
   async init() {
-    const allNodes = await nodesGetAll();
-    this.nodes = allNodes;
-
     logger.info('Service: Nodes init ...complete');
     return;
   }
@@ -29,10 +26,6 @@ module.exports = class Nodes {
   async addNode(event, request) {
     try {
       const newNode = await nodesAdd(request);
-
-      this.nodes.push(newNode);
-  
-      event.sender.send('nodes-getAll-reply', this.nodes);
       return newNode.id;
     } catch (e) {
       return e;
@@ -40,23 +33,17 @@ module.exports = class Nodes {
   }
 
   async removeNode(event, request) {
-    const isFoundIndex = this.nodes.findIndex((node) => node.id === nodeId);
-    if (isFoundIndex === -1) {
-      return null;
-    }
-
     const nodeId = await nodesRemove(request);
 
-    const copy = Array.from(this.nodes);
-    copy.splice(isFoundIndex, 1);
-    this.nodes = copy;
-  
-    event.sender.send('nodes-getAll-reply', this.nodes);
     return nodeId;
   }
 
-  getAllNodes(event) {
-    event.reply('nodes-getAll-reply', this.nodes);
+  async getNode(event, request) {
+    return await nodesGet(request);
+  }
+
+  async getManyNodes(event, request) {
+    return await nodesGetMany(request);
   }
 
   getNameAutocomplete(event, request) {

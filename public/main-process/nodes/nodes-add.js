@@ -1,5 +1,5 @@
 const storage = require('../services/storage/storage');
-const logger = require('../../../shared/services/logger/logger');
+const logger = require('../services/logger/logger');
 
 module.exports = async function nodesAdd(request) {
   logger.debug('Event - Node to add: ', request);

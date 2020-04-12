@@ -15,6 +15,8 @@ export default async function addTransactions(transaction) {
     throw new Error('addTransactions - missing (date)');
   }
 
+  console.log(transaction.date)
+
   const receipt = uid(transaction, Date.now());
   const payload = {
     ...transaction,

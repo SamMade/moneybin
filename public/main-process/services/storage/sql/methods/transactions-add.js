@@ -1,9 +1,9 @@
 const { promisify } = require('util');
 
-module.exports = async function(db, date, from, to, amount) {
+module.exports = async function(db, {date, from, to, amount, notes}) {
   await promisify(db.run.bind(db))(
-    'INSERT INTO Transactions(postDate, source, target, amount) VALUES(DATE(?), ?, ?, ?)',
-    [date, from, to, amount]
+    'INSERT INTO Transactions(postDate, source, target, amount, notes) VALUES(?, ?, ?, ?, ?)',
+    [date, from, to, amount, notes]
   );
 
   const { 

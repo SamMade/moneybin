@@ -18,7 +18,7 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 800,
     resizable: true,
     show: false,
     webPreferences: {
@@ -55,18 +55,19 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
-
-  await Storage.init(sqlite3Adapter);
-
-  const initPromises = [
-    NodesService.init(),
-    TransactionsService.init(),
-  ];
-
-  await Promise.all(initPromises);
-
-  createWindow();
+app.on('ready', () => {
+  (async () => {
+    await Storage.init(sqlite3Adapter);
+  
+    const initPromises = [
+      NodesService.init(),
+      TransactionsService.init(),
+    ];
+  
+    await Promise.all(initPromises);
+  
+    createWindow();
+  })();
 })
 
 // Quit when all windows are closed.

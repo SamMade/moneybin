@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import NodesServices from '../services';
-import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton'
-
 import { uid } from 'react-uid';
+import NodesServices from '../../../services/nodes';
 
-const { ipcRenderer } = window.require('electron');
+import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton'
 
 export default function NodesList() {
   const [allNodes, setAllNodes] = useState([]);
   const [filter, setFilter] = useState(null);
   const [filteredNodes, setFilteredNodes] = useState(null);
 
-  const nodeListListener = (event, arg) => {
-    setAllNodes(arg);
-  };
-
   useEffect(() => {
-    ipcRenderer.on('nodes-getAll-reply', nodeListListener);
-    NodesServices.getAllNodes();
-  
-    return () => {
-      ipcRenderer.removeListener('nodes-getAll-reply', nodeListListener);
-    };
+    (async () => {
+      const nodes = await NodesServices.getManyNodes();
+      setAllNodes(nodes)
+    })();
   }, []);
 
   // filter

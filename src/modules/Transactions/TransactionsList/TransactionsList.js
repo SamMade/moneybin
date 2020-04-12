@@ -1,37 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import TransactionsServices from '../services';
-// import TransactionsRemoveButton from '../TransactionsRemoveButton/TransactionsRemoveButton'
-
 import { uid } from 'react-uid';
-
-const { ipcRenderer } = window.require('electron');
+import moment from 'moment';
+import TransactionsServices from '../../../services/transactions';
 
 export default function TransactionsList() {
   const [allTransactions, setAllTransactions] = useState([]);
 
-  const transactionsListListener = (event, arg) => {
-    setAllTransactions(arg);
-  };
-
   useEffect(() => {
-    ipcRenderer.on('transactions-getAll-reply', transactionsListListener);
-    TransactionsServices.getAllTransactions();
-  
-    return () => {
-      ipcRenderer.removeListener('transactions-getAll-reply', transactionsListListener);
-    };
+    (async () => {
+      const transactions = await TransactionsServices.getManyTransactions({
+        max: 10,
+      });
+      setAllTransactions(transactions);
+    })();
   }, []);
 
   return (
     <>
+      <h2>Recent Transactions</h2>
       <ul>
         {
-          allTransactions.map((node, index) => (
-            <li key={uid(node, index)}>
-              <span title={moment(node.date).toString()}>{moment(node.date).fromNow()}</span>
-               - 
-              <span>{node.amount}</span>
+          allTransactions.map((transaction, index) => (
+            <li key={uid(transaction, index)}>
+              <span title={moment(transaction.date).toString()}>{moment(transaction.date).fromNow()}</span>
+              - 
+              <span>{transaction.from}</span> gave 
+              <span>{transaction.amount}</span> to
+              <span>{transaction.to}</span>
             </li>
           ))
         }

@@ -1,0 +1,14 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.listbox {
+  position: absolute;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  background-color: white;
+}

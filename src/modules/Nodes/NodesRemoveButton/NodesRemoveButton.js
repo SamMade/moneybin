@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NodesServices from '../services';
+import NodesServices from '../../../services/nodes';
 
 export default function NodesRemoveButton({ id }) {
   const [isConfirmed, setIsConfirmed] = useState(false);

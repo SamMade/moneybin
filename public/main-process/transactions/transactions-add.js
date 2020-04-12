@@ -1,6 +1,6 @@
-const storage = require('../services/storage/storage');
 const moment = require('moment');
-const logger = require('../../../shared/services/logger/logger');
+const storage = require('../services/storage/storage');
+const logger = require('../services/logger/logger');
 
 module.exports = async function transactionsAdd(request) {
   logger.debug('Event - Transaction to add: ', request);
@@ -26,7 +26,13 @@ module.exports = async function transactionsAdd(request) {
     throw new Error('Date Invalid');
   }
 
-  const id = await storage.transactionsAdd(transaction.name, transaction.type);
+  const id = await storage.transactionsAdd({
+    to: transaction.to,
+    from: transaction.from,
+    date: moment(transaction.date).valueOf(),
+    amount: transaction.amount,
+    notes: transaction.notes,
+  });
   logger.debug(`Event - Transaction added with id: ${id}`);
   
   const newTransaction = {

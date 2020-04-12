@@ -1,0 +1,6 @@
+.week {
+  display: flex; 
+}
+.dayOfWeek {
+  flex: 1;
+}
