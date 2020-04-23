@@ -8,7 +8,7 @@ function App() {
   const [state, dispatch] = useReducer(appReducer, appReducerInit);
 
   const contextValue = useMemo(() => {
-    return { state, dispatch };
+    return [state, dispatch];
   }, [state, dispatch]);
 
   return (

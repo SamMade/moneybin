@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import GlobalContext from '../../services/globalContext/globalContext';
 
 export default function Announcement() {
-  const {state: globalState, dispatch: globalDispatch} = useContext(GlobalContext);
+  const [globalState, globalDispatch] = useContext(GlobalContext);
 
   return (
     <div>
