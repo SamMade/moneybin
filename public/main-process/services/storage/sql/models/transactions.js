@@ -4,5 +4,6 @@ export default {
   from: 'source',
   amount: 'amount',
   date: 'postDate',
+  isRecurring: 'isRecurring',
   notes: 'notes',
 };

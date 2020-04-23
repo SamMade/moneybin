@@ -64,6 +64,7 @@ export default function NodesAddForm() {
             <option value="Person">Person</option>
             <option value="Bank">Bank</option>
             <option value="Credit Card">Credit Card</option>
+            <option value="Organization">Organization</option>
           </select>
         </div>
 

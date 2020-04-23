@@ -6,9 +6,10 @@ import styles from './Autocomplete.module.css';
 
 export default function Autocomplete({ id, onOptions, onChange }) {
   const [inputValue, setInputValue] = useState('');
+  const [hoverItem, setHoverItem] = useState(-1);
   const [options, setOptions] = useState([]);
 
-  useEffect(() => {
+  const callAutocomplete = async () => {
     if (!onOptions || (!inputValue && options.length === 0)) {
       return;
     }
@@ -18,17 +19,21 @@ export default function Autocomplete({ id, onOptions, onChange }) {
       return;
     }
   
-    (async () => {
-      const autocompleteList = await onOptions(inputValue);
+    const autocompleteList = await onOptions(inputValue);
       
-      if (autocompleteList && autocompleteList.length > 0) {
-        setOptions(autocompleteList);
-        return;
-      }
-      setOptions([]);
-    })();
+    if (autocompleteList && autocompleteList.length > 0) {
+      setOptions(autocompleteList);
+      return;
+    }
+    setOptions([]);
+  };
+
+  // set autocomplete triggering onOptions handler
+  useEffect(() => {
+    callAutocomplete();
   }, [inputValue, onOptions]);
 
+  // onChange handler triggered
   useEffect(() => {
     if (!onChange) {
       return;
@@ -41,8 +46,47 @@ export default function Autocomplete({ id, onOptions, onChange }) {
     setInputValue(id);
   }
 
+  // keyboard accessibility
+  const hoverOption = (event) => {
+    if (!options || options.length === 0) {
+      if (hoverItem !== -1) { setHoverItem(-1); }
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      if (hoverItem >= options.length - 1) {
+        setHoverItem(0);
+      } else {
+        setHoverItem(hoverItem + 1);
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (hoverItem <= 0) {
+        setHoverItem(options.length - 1);
+      } else {
+        setHoverItem(hoverItem - 1);
+      }
+      return;
+    }
+
+    if (event.key === 'Enter' && hoverItem >= 0 && hoverItem < options.length) {
+      event.preventDefault();
+      selectItem(options[hoverItem].id);
+      return;
+    }
+  }
+
   return (
-    <div className={`${styles.wrapper}`}>
+    <div className={`${styles.wrapper}`}
+      onKeyDown={hoverOption}
+      onBlur={() => {setOptions([]);}}
+      onFocus={() => {callAutocomplete();}}
+    >
       <span role="combobox"
         aria-expanded={(options.length > 0)}
         aria-owns="ex1-listbox"
@@ -62,9 +106,10 @@ export default function Autocomplete({ id, onOptions, onChange }) {
         className={`${styles.listbox}`}
       >
         {
-          options.map((item) => (
+          options.map((item, optionsIndex) => (
             <li key={uid(item)}
               onClick={()=>{selectItem(item.id)}}
+              className={(optionsIndex === hoverItem) ? styles.highlight : ''}
             >
               {item.name}
             </li>

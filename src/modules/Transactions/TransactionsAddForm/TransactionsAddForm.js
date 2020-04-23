@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { uid } from 'react-uid';
 import moment from 'moment';
 import NodesServices from '../../../services/nodes';
@@ -6,6 +6,10 @@ import TransactionsServices from '../../../services/transactions';
 
 import Autocomplete from '../../../shared/Autocomplete/Autocomplete';
 import Calendar from '../../../shared/Calendar/Calendar';
+
+import styles from './TransactionsAddForm.module.css';
+
+const dateFormat = 'MM-DD-YYYY';
 
 // autocomplete names
 const autocompleteName = async (name) => {
@@ -22,9 +26,13 @@ export default function TransactionsAddForm() {
   const [isConfirmed, setIsConfirmed] = useState(null);
   const [transactionFrom, setTransactionFrom] = useState('');
   const [transactionTo, setTransactionTo] = useState('');
+  const [transactionDatePretty, setTransactionDatePretty] = useState('');
   const [transactionDate, setTransactionDate] = useState('');
+  const [transactionRecurring, setTransactionRecurring] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('');
   const [transactionNotes, setTransactionNotes] = useState('');
+  const [toggleCalendar, setToggleCalendar] = useState(false);
+  const toggleCalendarTimeoutId = useRef();
 
   // reset form
   useEffect(() => {
@@ -50,7 +58,7 @@ export default function TransactionsAddForm() {
         to: transactionTo,
         from: transactionFrom,
         amount: transactionAmount,
-        date: moment.unix(transactionDate).valueOf(),
+        date: transactionDate,
         notes: transactionNotes,
       });
     } catch (e) {
@@ -67,6 +75,11 @@ export default function TransactionsAddForm() {
       error: false,
     });
   }
+
+  useEffect(() => {
+    if (!transactionDate) { return; }
+    setTransactionDatePretty(moment(transactionDate).format(dateFormat));
+  }, [transactionDate])
 
   return (
     <div>
@@ -94,19 +107,79 @@ export default function TransactionsAddForm() {
           />
         </div>
 
-        <div className="pure-control-group">
-          <label htmlFor={uid('Date')}>
+        <div
+          className={`pure-control-group ${styles['date-group']}`}
+          onFocus={() => {
+            clearTimeout(toggleCalendarTimeoutId.current);
+            setToggleCalendar(true);
+          }}
+          onBlur={() => {
+            toggleCalendarTimeoutId.current = setTimeout(() => {
+              setToggleCalendar(false);
+            }); 
+          }}
+        >
+          <label htmlFor={uid('DatePretty')}>
             Date: 
           </label>
-          <input id={uid('Date')} type="text" value={transactionDate} onChange={(event) => {setTransactionDate(event.target.value)}} />
-          <Calendar />
+          <input
+            id={uid('DatePretty')}
+            type="text"
+            value={transactionDatePretty}
+            onChange={(event) => {setTransactionDate(moment(event.target.value, dateFormat).valueOf())}}
+          />
+          <input
+            hidden
+            readOnly
+            id={uid('Date')}
+            type="text"
+            value={transactionDate}
+          />
+          {(toggleCalendar) && (
+            <Calendar
+              className={`${styles['date-calendar']}`}
+              value={transactionDate}
+              onChange={(date) => setTransactionDate(date)}
+            />
+          )}
         </div>
+
+        <div className="pure-control-group">
+          <label htmlFor={uid('Recurring')}>
+            Recurring: 
+          </label>
+          <input id={uid('Recurring')} type="checkbox" checked={transactionRecurring} onChange={(event) => {setTransactionRecurring(event.target.checked)}} />
+        </div>
+
+        {(transactionRecurring && (
+          <div className="pure-control-group">
+            <fieldset>
+              <label htmlFor={uid('RecurringFrequency')}>
+                Frequency: 
+              </label>
+              <select id={uid('RecurringFrequency')} >
+                <option>Daily</option>
+                <option>Weekly</option>
+                <option>Monthly</option>
+                <option>Yearly</option>
+              </select>
+            </fieldset>
+          </div>
+        ))}
 
         <div className="pure-control-group">
           <label htmlFor={uid('Amount')}>
             Amount: 
           </label>
-          <input id={uid('Amount')} type="text" value={transactionAmount} onChange={(event) => {setTransactionAmount(event.target.value)}} />
+          <input
+            id={uid('Amount')}
+            type="text"
+            value={transactionAmount}
+            onChange={(event) => {
+              const filter = /[^0-9.]/ig;
+              setTransactionAmount(event.target.value.replace(filter, ''));
+            }}
+          />
         </div>
 
         <div className="pure-control-group">

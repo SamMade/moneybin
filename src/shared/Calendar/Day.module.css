@@ -1,0 +1,18 @@
+.day {
+  padding: 0;
+  border: 0;
+  border-left: 1px solid;
+}
+
+.day--selected {
+  background-color: orange;
+}
+
+.day--enabled.active, .day--enabled:hover {
+  background-color: yellow;
+}
+
+.day--disabled {
+  background-color: rgb(0,0,0,.2);
+}
+

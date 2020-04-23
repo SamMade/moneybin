@@ -1,6 +1,19 @@
+.calendar {
+  background-color: white;
+  padding: 1em;
+  border: 1px solid;
+}
+
 .week {
   display: flex; 
+  border-bottom: 1px solid;
+  border-right: 1px solid;
 }
+
+.week-header {
+  border-right: 0;
+}
+
 .dayOfWeek {
   flex: 1;
 }

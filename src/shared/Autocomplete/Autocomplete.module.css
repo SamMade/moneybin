@@ -12,3 +12,8 @@
   z-index: 1;
   background-color: white;
 }
+
+.highlight {
+  /* TODO: use theme */
+  background-color: blue;
+}
