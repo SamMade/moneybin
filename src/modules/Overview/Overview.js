@@ -5,7 +5,8 @@ import Sidebar from '../Sidebar/Sidebar';
 
 import GlobalContext from '../../services/globalContext/globalContext';
 import NodesList from '../Nodes/NodesList/NodesList';
-import TransactionsList from '../Transactions/TransactionsList/TransactionsList';
+import TransactionsList from './components/TransactionsList';
+import TransactionsFlow from './components/TransactionFlow';
 
 export default function Overview() {
   const [globalState, globalDispatch] = useContext(GlobalContext);
@@ -16,6 +17,9 @@ export default function Overview() {
     <Layout sidebar={sidebar}>
       <div>
         {globalState.timeframe.start} - {globalState.timeframe.end} 
+      </div>
+      <div>
+        <TransactionsFlow />
       </div>
       <div className="pure-g">
         <div className="pure-u-1-2">

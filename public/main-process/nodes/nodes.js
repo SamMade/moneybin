@@ -29,6 +29,7 @@ module.exports = class Nodes {
   async addNode(event, request) {
     try {
       const newNode = await nodesAdd(request);
+      event.sender.send('server-event', 'node-added');
       return newNode.id;
     } catch (e) {
       return e;
@@ -37,7 +38,7 @@ module.exports = class Nodes {
 
   async removeNode(event, request) {
     const nodeId = await nodesRemove(request);
-
+    event.sender.send('server-event', 'node-removed');
     return nodeId;
   }
 

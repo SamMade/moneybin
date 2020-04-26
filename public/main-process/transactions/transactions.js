@@ -24,7 +24,7 @@ module.exports = class Transactions {
   async addTransaction(event, request) {
     try {
       const newTransaction = await transactionsAdd(request);
-
+      event.sender.send('server-event', 'transaction-added');
       return newTransaction.id;
     } catch (e) {
       return e;
@@ -33,7 +33,7 @@ module.exports = class Transactions {
 
   async removeTransaction(event, request) {
     const transactionId = await transactionsRemove(request);
-
+    event.sender.send('server-event', 'transaction-removed');
     return transactionId;
   }
 

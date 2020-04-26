@@ -2,6 +2,19 @@ const moment = require('moment');
 const storage = require('../services/storage/storage');
 const logger = require('../services/logger/logger');
 
+/**
+ * @typedef transactionsAddRequest
+ * @type {object}
+ * @property {string} to
+ * @property {string} from
+ * @property {number} amount
+ * @property {number} postDate
+ * @property {string} notes
+ */
+
+/**
+ * @param {transactionsAddRequest} request
+ */
 module.exports = async function transactionsAdd(request) {
   logger.debug('Event - Transaction to add: ', request);
   const { uid, ...transaction } = request;

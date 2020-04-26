@@ -1,4 +1,6 @@
 const logger = require('../../logger/logger');
+const transformConditions = require('./conditions');
+const transformMethods = require('./methods');
 
 /**
  * @typedef Equations
@@ -33,66 +35,20 @@ function setFilters(filterObj) {
     sqlPrepared = sqlPrepared.concat(preparedValues);
 
     if (parameterIndex < filterObj.condition.length) {
-      sqlFilter += `${transformCondition(filterObj.condition[parameterIndex])} `;
+      sqlFilter += `${transformConditions(filterObj.condition[parameterIndex])} `;
     }
   });
 
   return [sqlFilter, sqlPrepared];
 }
 
-function transformCondition(condition) {
-  switch(condition) {
-    case 'and':
-      return 'AND';
-    case 'or':
-      return 'OR';
-    default:
-      logger.error(`Unrecognized Condition: ${condition}`);
-      throw new Error('CONDITION_UNDEFINED');
-  }
-}
 
 function transformParameter(parameter) {
   // equation
   if (parameter.method) {
-    return transformEquation(parameter);
+    return transformMethods(parameter);
   }
 
   const nextGroup = setFilters(parameter);
   return [`(${nextGroup[0]}) `, nextGroup[1]];
-}
-
-function transformEquation(equation) {
-  switch (equation.method) {
-    case 'eq':
-      return [`${equation.parameters[0]} = ? `, [valueWithCorrectType(equation.parameters[1])]];
-    case 'neq':
-      return [`${equation.parameters[0]} <> ? `, [valueWithCorrectType(equation.parameters[1])]];
-    case 'gt':
-      return [`${equation.parameters[0]} > ? `, [valueWithCorrectType(equation.parameters[1])]];
-    case 'gte':
-      return [`${equation.parameters[0]} >= ? `, [valueWithCorrectType(equation.parameters[1])]];
-    case 'lt':
-      return [`${equation.parameters[0]} < ? `, [valueWithCorrectType(equation.parameters[1])]];
-    case 'lte':
-      return [`${equation.parameters[0]} <= ? `, [valueWithCorrectType(equation.parameters[1])]];
-    default:
-      logger.error(`Unrecognized Method: ${equation.method}`);
-      throw new Error('METHOD_UNDEFINED');
-  }
-}
-
-function valueWithCorrectType(input) {
-  const stringRegex = /^'(.+)'|"(.+)"$/;
-  const isString = input.match(stringRegex);
-  
-  // return string without quotes
-  if (isString) {
-    return isString[1] || isString[2];
-  }
-
-  // return number
-  if (!isNaN(input)) {
-    return +input;
-  }
 }

@@ -2,7 +2,17 @@ import React, { useEffect, useState, useContext } from 'react';
 import { uid } from 'react-uid';
 import moment from 'moment';
 import TransactionsServices from '../../../services/transactions';
+import NodesServices from '../../../services/nodes';
 import GlobalContext from '../../../services/globalContext/globalContext';
+
+async function getData(start, end) {
+  const transactionsApi = TransactionsServices.getManyTransactions({
+    filter: `gte(postDate, ${start}) and lte(postDate, ${end})`,
+  });
+  const nodesApi = NodesServices.getManyNodes();
+
+  return await Promise.all([nodesApi, transactionsApi]);
+}
 
 export default function TransactionsList() {
   const [globalState] = useContext(GlobalContext);
@@ -10,11 +20,13 @@ export default function TransactionsList() {
 
   useEffect(() => {
     (async () => {
-      const transactions = await TransactionsServices.getManyTransactions({
-        filter: `gte(postDate, ${globalState.timeframe.start}) and lte(postDate, ${globalState.timeframe.end})`,
-        // max: 10,
-      });
-      setAllTransactions(transactions);
+      const [nodes, transactions] = await getData(globalState.timeframe.start, globalState.timeframe.end);
+
+      setAllTransactions(transactions.map((transaction) => ({
+        ...transaction,
+        from: nodes.find((node) => node.id === transaction.from).name,
+        to: nodes.find((node) => node.id === transaction.to).name,
+      })));
     })();
   }, [globalState.refreshTrigger, globalState.timeframe]);
 
@@ -26,9 +38,11 @@ export default function TransactionsList() {
           allTransactions.map((transaction, index) => (
             <li key={uid(transaction, index)}>
               <span title={moment(transaction.date).toString()}>{moment(transaction.date).fromNow()}</span>
-              - 
-              <span>{transaction.from}</span> gave 
-              <span>{transaction.amount}</span> to
+              &nbsp;-&nbsp;
+              <span>{transaction.from}</span>
+              &nbsp;gave&nbsp;
+              <span>${transaction.amount}</span>
+              &nbsp;to&nbsp;
               <span>{transaction.to}</span>
             </li>
           ))

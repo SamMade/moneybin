@@ -45,9 +45,9 @@ module.exports = function extractMethods(filterString) {
     return '?';
   };
 
-  logger.debug(`Found ${methods.length} methods used in query`);
-
   const simpleFilterString = filterString.replace(methodFormat, matchFunction);
+  
+  logger.debug(`Found ${methods.length} methods used in query`);
 
   return [simpleFilterString, methods];
 }

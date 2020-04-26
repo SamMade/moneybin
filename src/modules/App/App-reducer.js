@@ -12,6 +12,11 @@ export function appReducer(state, action) {
         ...state,
         node: action.node,
       };
+    case 'server-event':
+      return {
+        ...state,
+        refreshTrigger: state.refreshTrigger + 1,
+      }
     case 'change-timeframe': 
       return {
         ...state,
@@ -29,6 +34,7 @@ export function appReducer(state, action) {
 export const appReducerInit = {
   announcement: [],
   node: null,
+  refreshTrigger: 0,
   timeframe: {
     start: moment().startOf('month').valueOf(),
     end: moment().endOf('month').valueOf(),
