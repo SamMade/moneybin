@@ -1,10 +1,17 @@
 const { promisify } = require('util');
 const has = require('lodash/has');
 const logger = require('../services/logger/logger');
+const apiFilter = require('../services/api/setFilters/setFilters');
 
 module.exports = async function SqlNodesGetMany(db, request) {
   let parameters = [];
   let query = 'SELECT * FROM Nodes';
+
+  if (has(request, 'filter')) {
+    const filter = apiFilter(request.filter);
+    query += ` WHERE ${filter[0]}`;
+    parameters = parameters.concat(filter[1]);
+  }
 
   if (has(request, 'max')) {
     query += ' LIMIT ?';

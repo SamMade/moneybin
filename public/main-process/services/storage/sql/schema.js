@@ -4,6 +4,7 @@ module.exports = {
     `CREATE TABLE IF NOT EXISTS Nodes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
+      isDefault INTEGER,
       type TEXT
     );`,
     `CREATE VIRTUAL TABLE IF NOT EXISTS Nodes_index USING fts5(name);`,
@@ -33,7 +34,7 @@ module.exports = {
       target INTEGER
     );`,
     `CREATE TABLE IF NOT EXISTS TransactionsRecurring (
-      eventid INTEGER,
+      eventId INTEGER,
       repeatStart INTEGER,
       repeatEnd INTEGER,
       repeatInterval INTEGER,

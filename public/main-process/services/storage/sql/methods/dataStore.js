@@ -1,5 +1,3 @@
-'use strict';
-
 const Storage = require('../../storage');
 const storage = new Storage();
 

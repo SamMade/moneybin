@@ -3,7 +3,7 @@ export default {
   to: 'target',
   from: 'source',
   amount: 'amount',
-  date: 'postDate',
+  postDate: 'postDate',
   isRecurring: 'isRecurring',
   notes: 'notes',
 };

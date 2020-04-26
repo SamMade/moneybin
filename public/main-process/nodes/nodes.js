@@ -7,6 +7,9 @@ const nodesAdd = require('./nodes-add');
 const nodesRemove = require('./nodes-remove');
 const nodesNameAutocomplete = require('./nodes-getName-autocomplete');
 
+/**
+ * @module Nodes
+ */
 module.exports = class Nodes {
   constructor() {
     ipcMain.handle('nodes-getMany', this.getManyNodes.bind(this));
@@ -42,6 +45,11 @@ module.exports = class Nodes {
     return await nodesGet(request);
   }
 
+  /**
+   * Get multiple Nodes
+   * @param {*} event 
+   * @param {import('./nodes-getMany').getManyRequest} request 
+   */
   async getManyNodes(event, request) {
     return await nodesGetMany(request);
   }

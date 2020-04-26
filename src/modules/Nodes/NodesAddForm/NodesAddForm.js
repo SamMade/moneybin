@@ -8,6 +8,7 @@ export default function NodesAddForm() {
   const [isConfirmed, setIsConfirmed] = useState(null);
   const [addName, setAddName] = useState('');
   const [addType, setAddType] = useState(defaultType);
+  const [addIsDefault, setAddIsDefault] = useState('');
   
   // reset
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function NodesAddForm() {
       const receipt = await NodesServices.addNodes({
         name: addName,
         type: addType,
+        isDefault: addIsDefault,
       });
     } catch(e) {
       console.error(e);
@@ -66,6 +68,13 @@ export default function NodesAddForm() {
             <option value="Credit Card">Credit Card</option>
             <option value="Organization">Organization</option>
           </select>
+        </div>
+
+        <div className="pure-control-group">
+          <label htmlFor={uid('Default')}>
+            Default: 
+          </label>
+          <input id={uid('Default')} type="checkbox" checked={addIsDefault} onChange={(event) => {setAddIsDefault(event.target.checked)}} />
         </div>
 
         <div className="pure-controls">

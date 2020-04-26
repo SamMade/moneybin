@@ -9,6 +9,7 @@ export default function TransactionsList() {
   useEffect(() => {
     (async () => {
       const transactions = await TransactionsServices.getManyTransactions({
+        // filter: '',
         max: 10,
       });
       setAllTransactions(transactions);

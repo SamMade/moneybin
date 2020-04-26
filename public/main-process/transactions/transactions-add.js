@@ -18,18 +18,18 @@ module.exports = async function transactionsAdd(request) {
     throw new Error('Missing required field (amount)');
   }
 
-  if (!transaction.date) {
-    throw new Error('Missing required field (date)');
+  if (!transaction.postDate) {
+    throw new Error('Missing required field (postDate)');
   }
 
-  if (!moment(transaction.date).isValid()) {
+  if (!moment(transaction.postDate).isValid()) {
     throw new Error('Date Invalid');
   }
 
   const id = await storage.transactionsAdd({
     to: transaction.to,
     from: transaction.from,
-    date: moment(transaction.date).valueOf(),
+    postDate: moment(transaction.postDate).valueOf(),
     amount: transaction.amount,
     notes: transaction.notes,
   });

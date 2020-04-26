@@ -23,4 +23,9 @@ describe("extractEquations", () => {
       }
     ]);
   });
+
+  test("function is lower case", () => {
+    const [, result] = moduleTest("Equals(aweraw, 'awer')")
+    expect(result[0].method).toEqual('equals');
+  });
 });

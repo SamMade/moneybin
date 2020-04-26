@@ -58,7 +58,7 @@ export default function TransactionsAddForm() {
         to: transactionTo,
         from: transactionFrom,
         amount: transactionAmount,
-        date: transactionDate,
+        postDate: transactionDate,
         notes: transactionNotes,
       });
     } catch (e) {

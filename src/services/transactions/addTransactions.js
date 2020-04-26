@@ -11,11 +11,9 @@ export default async function addTransactions(transaction) {
   if (!transaction.amount) {
     throw new Error('addTransactions - missing (amount)');
   }
-  if (!transaction.date) {
+  if (!transaction.postDate) {
     throw new Error('addTransactions - missing (date)');
   }
-
-  console.log(transaction.date)
 
   const receipt = uid(transaction, Date.now());
   const payload = {

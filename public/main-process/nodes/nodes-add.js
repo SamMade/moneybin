@@ -13,7 +13,11 @@ module.exports = async function nodesAdd(request) {
     throw new Error('Missing required field (type)');
   }
 
-  const id = await storage.nodesAdd(node.name, node.type);
+  const id = await storage.nodesAdd({
+    name: node.name,
+    type: node.type,
+    isDefault: node.isDefault,
+  });
   logger.debug(`Event - Node added with id: ${id}`);
   
   const newNode = {
