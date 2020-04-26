@@ -1,18 +1,18 @@
-/** @typedef {import('./extractEquations').equations} Equations */
+/** @typedef {import('./methodExtract').equations} Equations */
 
 /**
- * @typedef insertEquationsReturn
+ * @typedef methodReinsertReturn
  * @type {Object}
- * @property {Array.<(Equations|insertEquationsReturn)>} parameters
+ * @property {Array.<(Equations|methodReinsertReturn)>} parameters
  * @property {Array.<string>} condition
  */
 
 /**
  * @param {import('./getConditionsNesting').getConditionsNestingReturn} conditions
- * @param {Array.<import('./extractEquations').equations>} equations
- * @returns {insertEquationsReturn}
+ * @param {Array.<import('./methodExtract').equations>} equations
+ * @returns {methodReinsertReturn}
  */
-module.exports = function insertEquations(conditions, equations) {
+module.exports = function methodReinsert(conditions, equations) {
   const equationsBuffer = [].concat(equations);
 
   return recursiveInsert(conditions, equationsBuffer);

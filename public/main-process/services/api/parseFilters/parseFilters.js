@@ -1,21 +1,21 @@
-const extractEquations = require('./extractEquations');
+const methodExtract = require('./methodExtract');
 const getConditionsNesting = require('./getConditionsNesting');
-const insertEquations = require('./insertEquations');
+const methodReinsert = require('./methodReinsert');
 
 /**
  * This file is to parse a filter string into it's respective operations
  * @param {string} filterString The filter query
- * @returns {import('./insertEquations').insertEquationsReturn}
+ * @returns {import('./methodReinsert').methodReinsertReturn}
  */
 module.exports = function parseFilters(filterString) {
   if (!filterString) { return null; }
 
-  // extract equations
-  const [noEquationsFilter, equations] = extractEquations(filterString);
+  // extract methods
+  const [noEquationsFilter, methods] = methodExtract(filterString);
 
   // identify groups and conditions
   const conditionsObject = getConditionsNesting(noEquationsFilter);
 
-  // insert back equations
-  return insertEquations(conditionsObject, equations);
+  // insert back methods
+  return methodReinsert(conditionsObject, methods);
 }

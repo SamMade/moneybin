@@ -1,30 +1,30 @@
-const moduleTest = require('./insertEquations');
+const moduleTest = require('./methodReinsert');
 
-describe("insertEquations", () => {
-  it("inserts equations", () => {
+describe("methodReinsert", () => {
+  it("inserts methods", () => {
     const conditions = {
       condition: ['and'],
       parameters: ['?', '?'],
     };
-    const equations = [
+    const methods = [
       {
-        method: 'equals',
+        method: 'eq',
         parameters: ['a', "'a'"],
       },
       {
-        method: 'equals',
+        method: 'eq',
         parameters: ['b', "'b'"],
       }
     ]
 
-    const result = moduleTest(conditions, equations)
+    const result = moduleTest(conditions, methods)
     expect(result).toEqual({
       condition: ['and'],
       parameters: [{
-        method: 'equals',
+        method: 'eq',
         parameters: ['a', "'a'"],
       }, {
-        method: 'equals',
+        method: 'eq',
         parameters: ['b', "'b'"],
       }],
     });

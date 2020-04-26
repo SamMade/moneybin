@@ -44,6 +44,8 @@ function transformCondition(condition) {
   switch(condition) {
     case 'and':
       return 'AND';
+    case 'or':
+      return 'OR';
     default:
       logger.error(`Unrecognized Condition: ${condition}`);
       throw new Error('CONDITION_UNDEFINED');
@@ -62,8 +64,18 @@ function transformParameter(parameter) {
 
 function transformEquation(equation) {
   switch (equation.method) {
-    case 'equals':
-      return [`${equation.parameters[0]} = ? `, [valueWithCorrectType(equation.parameters[1])]]
+    case 'eq':
+      return [`${equation.parameters[0]} = ? `, [valueWithCorrectType(equation.parameters[1])]];
+    case 'neq':
+      return [`${equation.parameters[0]} <> ? `, [valueWithCorrectType(equation.parameters[1])]];
+    case 'gt':
+      return [`${equation.parameters[0]} > ? `, [valueWithCorrectType(equation.parameters[1])]];
+    case 'gte':
+      return [`${equation.parameters[0]} >= ? `, [valueWithCorrectType(equation.parameters[1])]];
+    case 'lt':
+      return [`${equation.parameters[0]} < ? `, [valueWithCorrectType(equation.parameters[1])]];
+    case 'lte':
+      return [`${equation.parameters[0]} <= ? `, [valueWithCorrectType(equation.parameters[1])]];
     default:
       logger.error(`Unrecognized Method: ${equation.method}`);
       throw new Error('METHOD_UNDEFINED');

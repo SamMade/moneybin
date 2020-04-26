@@ -5,10 +5,10 @@ describe("setFilters", () => {
     const filterObj = {
       condition: ['and'],
       parameters: [{
-        method: 'equals',
+        method: 'eq',
         parameters: ['a', "'a'"],
       }, {
-        method: 'equals',
+        method: 'eq',
         parameters: ['b', "1"],
       }],
     };
