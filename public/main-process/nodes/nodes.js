@@ -26,6 +26,12 @@ module.exports = class Nodes {
     return;
   }
 
+  /**
+   * 
+   * @param {*} event 
+   * @param {import('./nodes-add').nodesAddRequest} request 
+   * @returns {string} id of the node
+   */
   async addNode(event, request) {
     try {
       const newNode = await nodesAdd(request);

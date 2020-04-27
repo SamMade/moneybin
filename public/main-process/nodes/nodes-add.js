@@ -1,6 +1,28 @@
 const storage = require('../services/storage/storage');
 const logger = require('../services/logger/logger');
 
+/**
+ * @typedef nodesAddRequest
+ * @type {object}
+ * @property {string} id
+ * @property {string} name
+ * @property {string} type
+ * @property {boolean} isDefault
+ */
+
+/**
+ * @typedef nodesAddRequest
+ * @type {object}
+ * @property {string} name
+ * @property {string} type
+ * @property {boolean} isDefault
+ */
+
+/**
+ * Add node
+ * @param {nodesAddRequest} request
+ * @returns {nodesAddReturn}
+ */
 module.exports = async function nodesAdd(request) {
   logger.debug('Event - Node to add: ', request);
   const { uid, ...node } = request;

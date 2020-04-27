@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { uid } from 'react-uid';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
+import { sankeyCircular } from 'd3-sankey-circular';
 
 const color = scaleOrdinal(schemeCategory10);
 
@@ -13,7 +13,7 @@ export default function Sankey({ nodes, links, width, height }) {
   const [sankeyElements, setSankeyElements] = useState([[], []]);
 
   useEffect(() => {
-    SankeyChart.current = sankey()
+    SankeyChart.current = sankeyCircular()
       .nodeWidth(15)
       .nodePadding(10)
       .extent([[1, 1], [width - 1, height - 5]])
@@ -29,7 +29,7 @@ export default function Sankey({ nodes, links, width, height }) {
       links: cloneDeep(links),
     };
     const {nodes: sankeyNodes, links: sankeyLinks} = SankeyChart.current(cloneData);
-
+  
     setSankeyElements([sankeyNodes, sankeyLinks]);
   }, [nodes, links])
 
@@ -85,7 +85,7 @@ const Rect = ({title, x0, x1, y0, y1, fill}) => {
 
 const Path = ({ link, color }) => (
   <path
-    d={sankeyLinkHorizontal()(link)}
+    d={link.path}
     style={{
       fill: 'none',
       strokeOpacity: '.3',

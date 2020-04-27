@@ -8,6 +8,7 @@ import GlobalContext from '../../../services/globalContext/globalContext';
 async function getData(start, end) {
   const transactionsApi = TransactionsServices.getManyTransactions({
     filter: `gte(postDate, ${start}) and lte(postDate, ${end})`,
+    sort: '-postDate',
   });
   const nodesApi = NodesServices.getManyNodes();
 

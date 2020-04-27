@@ -23,7 +23,7 @@ export function appReducer(state, action) {
         timeframe: {
           start: action.start,
           end: action.end,
-          type: action.type, 
+          type: action.text, 
         },
       };
     default:

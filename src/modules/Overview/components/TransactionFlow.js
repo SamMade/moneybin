@@ -15,10 +15,15 @@ async function getData(start, end) {
 
   const [transactions, nodes] = await Promise.all([transactionsApi, nodesApi]);
 
-  const sankeyNodes = nodes.map((node) => ({
-    id: node.id.toString(),
-    name: node.name,
-  }));
+  const sankeyNodes = nodes
+    // filter because https://github.com/tomshanley/d3-sankey-circular/issues/40
+    .filter((node) => 
+      transactions.some((transaction) => 
+        (node.id === transaction.from || node.id === transaction.to)))
+    .map((node) => ({
+      id: node.id.toString(),
+      name: node.name,
+    }));
 
   const sankeyLinks = transactions.map((transaction) => ({
     source: transaction.from.toString(),
