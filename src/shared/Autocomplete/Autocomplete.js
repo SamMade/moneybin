@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { uid } from 'react-uid';
 
 import styles from './Autocomplete.module.css';
 
+// TODO: fix select / blur / mouse click select
+
 export default function Autocomplete({ id, onOptions, onChange }) {
   const [inputValue, setInputValue] = useState('');
   const [hoverItem, setHoverItem] = useState(-1);
   const [options, setOptions] = useState([]);
+  const timeOutId = useRef();
 
   const callAutocomplete = async () => {
+    clearTimeout(timeOutId.current);
+
     if (!onOptions || (!inputValue && options.length === 0)) {
       return;
     }
@@ -25,8 +30,19 @@ export default function Autocomplete({ id, onOptions, onChange }) {
       setOptions(autocompleteList);
       return;
     }
-    setOptions([]);
+
+    // setOptions([]);
   };
+
+  const removeAutocomplete = () => {
+    timeOutId.current = setTimeout(() => {
+      setOptions([]);
+    });
+  };
+
+  const selectItem = (id) => {
+    setInputValue(id);
+  }
 
   // set autocomplete triggering onOptions handler
   useEffect(() => {
@@ -41,10 +57,6 @@ export default function Autocomplete({ id, onOptions, onChange }) {
 
     onChange(inputValue);
   }, [inputValue])
-
-  const selectItem = (id) => {
-    setInputValue(id);
-  }
 
   // keyboard accessibility
   const hoverOption = (event) => {
@@ -84,8 +96,8 @@ export default function Autocomplete({ id, onOptions, onChange }) {
   return (
     <div className={`${styles.wrapper}`}
       onKeyDown={hoverOption}
-      onBlur={() => {setOptions([]);}}
-      onFocus={() => {callAutocomplete();}}
+      onBlur={removeAutocomplete}
+      onFocus={callAutocomplete}
     >
       <span role="combobox"
         aria-expanded={(options.length > 0)}
@@ -108,7 +120,7 @@ export default function Autocomplete({ id, onOptions, onChange }) {
         {
           options.map((item, optionsIndex) => (
             <li key={uid(item)}
-              onClick={()=>{selectItem(item.id)}}
+              onClick={() => { selectItem(item.id) }}
               className={(optionsIndex === hoverItem) ? styles.highlight : ''}
             >
               {item.name}

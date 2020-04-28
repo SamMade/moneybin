@@ -7,6 +7,7 @@ import NodesList from '../Nodes/NodesList/NodesList';
 import TimeframePicker from './components/TimeframePicker';
 import TransactionsList from './components/TransactionsList';
 import TransactionsFlow from './components/TransactionFlow';
+import TransactionTotals from './components/TransactionTotals';
 
 export default function Overview() {
 
@@ -20,6 +21,10 @@ export default function Overview() {
 
       <div>
         <TransactionsFlow />
+      </div>
+
+      <div>
+        <TransactionTotals />
       </div>
 
       <div className="pure-g">

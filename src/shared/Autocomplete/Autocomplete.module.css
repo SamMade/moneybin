@@ -5,6 +5,7 @@
 
 .listbox {
   position: absolute;
+  cursor: pointer;
   width: 100%;
   list-style: none;
   margin: 0;
@@ -13,7 +14,7 @@
   background-color: white;
 }
 
-.highlight {
+.listbox li:hover, .highlight {
   /* TODO: use theme */
   background-color: blue;
 }

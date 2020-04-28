@@ -18,6 +18,12 @@ module.exports = function methodValidate(methodObj) {
         throw new Error('METHOD_INVALID_INPUT');
       }
       break;
+    case 'in':
+      if (methodObj.parameters.length < 2) {
+        logger.error('Method (in): requires at least 2 parameters')
+        throw new Error('METHOD_INVALID_INPUT');
+      }
+      break;
     case 'gt':
       if (methodObj.parameters.length !== 2) {
         logger.error('Method (gt): requires only 2 parameters')

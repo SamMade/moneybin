@@ -6,6 +6,9 @@ module.exports = function transformEquation(methodObj) {
       return [`${methodObj.parameters[0]} = ? `, [valueWithCorrectType(methodObj.parameters[1])]];
     case 'neq':
       return [`${methodObj.parameters[0]} <> ? `, [valueWithCorrectType(methodObj.parameters[1])]];
+    case 'in':
+      const inValues = methodObj.parameters.slice(1);
+      return [`${methodObj.parameters[0]} IN (${inValues.map(() => '?').join(', ')}) `, inValues.map((val) => valueWithCorrectType(val)) ];
     case 'gt':
       return [`${methodObj.parameters[0]} > ? `, [valueWithCorrectType(methodObj.parameters[1])]];
     case 'gte':

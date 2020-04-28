@@ -1,3 +1,4 @@
+const logger = require('../../logger/logger');
 const methodExtract = require('./methodExtract');
 const getConditionsNesting = require('./getConditionsNesting');
 const methodReinsert = require('./methodReinsert');
@@ -9,6 +10,8 @@ const methodReinsert = require('./methodReinsert');
  */
 module.exports = function parseFilters(filterString) {
   if (!filterString) { return null; }
+
+  logger.debug(`Original filter: ${filterString}`);
 
   // extract methods
   const [noEquationsFilter, methods] = methodExtract(filterString);
