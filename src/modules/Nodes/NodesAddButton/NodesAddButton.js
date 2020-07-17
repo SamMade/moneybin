@@ -4,7 +4,7 @@ import NodesAddForm from '../NodesAddForm/NodesAddForm';
 import Button from '../../../shared/Button/Button';
 import Modal from '../../../shared/Modal/Modal';
 
-export default function NodesAddButton({ className }) {
+export default function NodesAddButton({ buttonType, className }) {
   const [isShown, setIsShown] = useState(false);
 
   const toggleModal = () => {
@@ -13,7 +13,13 @@ export default function NodesAddButton({ className }) {
 
   return (
     <>
-      <Button className={className} onClick={toggleModal}>Add Node</Button>
+      <Button
+        className={className}
+        onClick={toggleModal}
+        type={buttonType}
+      >
+        Add Node
+      </Button>
       {
         (isShown
           && (

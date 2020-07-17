@@ -31,18 +31,8 @@ module.exports = {
       notes TEXT,
       amount REAL,
       source INTEGER,
-      target INTEGER
-    );`,
-    `CREATE TABLE IF NOT EXISTS TransactionsRecurring (
-      eventId INTEGER,
-      repeatStart INTEGER,
-      repeatEnd INTEGER,
-      repeatInterval INTEGER,
-      repeatYear,
-      repeatMonth,
-      repeatDay,
-      repeatWeek,
-      repeatWeekday
+      target INTEGER,
+      rrule TEXT
     );`,
     `CREATE VIRTUAL TABLE IF NOT EXISTS Transactions_index USING fts5(notes, tokenize=porter);`,
     `CREATE TRIGGER IF NOT EXISTS after_Transactions_insert AFTER INSERT ON Transactions BEGIN

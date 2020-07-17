@@ -7,8 +7,6 @@ export default function Sidebar() {
 
   return (
     <>
-      Sidebar menu
-
       <div className="pure-menu">
         <a className="pure-menu-heading" href="#">Company</a>
 
@@ -21,10 +19,10 @@ export default function Sidebar() {
             </li>
 
             <li className="pure-menu-item menu-item-divided">
-              <TransactionsAddButton className="pure-menu-link" />
+              <TransactionsAddButton buttonType="transparent" className="pure-menu-link" />
             </li>
             <li className="pure-menu-item">
-              <NodesAddButton className="pure-menu-link" />
+              <NodesAddButton buttonType="transparent" className="pure-menu-link" />
             </li>
         </ul>
       </div>

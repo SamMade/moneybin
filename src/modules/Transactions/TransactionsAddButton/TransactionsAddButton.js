@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import TransactionsAddForm from '../TransactionsAddForm/TransactionsAddForm';
 import Button from '../../../shared/Button/Button';
 import Modal from '../../../shared/Modal/Modal';
 
-export default function TransactionsAddButton() {
+export default function TransactionsAddButton({ buttonType, className }) {
   const [isShown, setIsShown] = useState(false);
 
   const toggleModal = () => {
@@ -12,8 +13,13 @@ export default function TransactionsAddButton() {
   }
 
   return (
-    <div>
-      <Button onClick={toggleModal}>Add Transaction</Button>
+    <>
+      <Button
+        className={className}
+        onClick={toggleModal}
+        type={buttonType}
+      >
+        Add Transaction</Button>
       {
         (isShown
           && (
@@ -22,6 +28,10 @@ export default function TransactionsAddButton() {
             </Modal>
           ))
       }
-    </div>
+    </>
   );
 }
+
+TransactionsAddButton.propTypes = {
+  buttonType: PropTypes.string,
+};

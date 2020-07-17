@@ -47,9 +47,9 @@
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
     "react-scripts": "^3.4.1",
-    "react-uid": "^2.2.0",
+    "react-uid": "^2.3.0",
     "sqlite3": "^4.1.1",
-    "winston": "^3.2.1"
+    "winston": "^3.3.3"
   },
   "browserslist": {
     "production": [

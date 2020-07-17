@@ -1,12 +1,15 @@
 import React from 'react';
 
+import styles from './SidebarMain.module.css';
+
 export default function SidebarMain({sidebar, children}) {
   return (
-    <div className="pure-g">
-      <div className="pure-u-1-5">
+    <div id={styles['SidebarMain']}>
+      <div id={styles['SidebarMain-menu--expanded']}>
         {sidebar}
+        <span id={styles['SidebarMain-menu--hamburger']}></span>
       </div>
-      <div className="pure-u-4-5">
+      <div>
         {children}
       </div>
     </div>
