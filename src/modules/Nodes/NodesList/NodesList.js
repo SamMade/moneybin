@@ -3,7 +3,7 @@ import { uid } from 'react-uid';
 import NodesServices from '../../../services/nodes';
 import GlobalContext from '../../../services/globalContext/globalContext';
 
-import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton'
+import NodesAddEditButton from '../NodesAddEditButton/NodesAddEditButton';
 
 export default function NodesList() {
   const [globalState] = useContext(GlobalContext);
@@ -52,7 +52,7 @@ export default function NodesList() {
 function ListItem({node}) {
   return (
     <li>
-      {node.name} ({node.id}) - {node.type} <NodesRemoveButton id={node.id} />
+      <NodesAddEditButton editId={node.id}>{node.name} ({node.id}) - {node.type}</NodesAddEditButton>
     </li>
   );
 }

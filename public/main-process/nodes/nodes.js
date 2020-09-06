@@ -12,9 +12,9 @@ const nodesNameAutocomplete = require('./nodes-getName-autocomplete');
  */
 module.exports = class Nodes {
   constructor() {
-    ipcMain.handle('nodes-getMany', this.getManyNodes.bind(this));
     ipcMain.handle('nodes-get', this.getNode.bind(this));
-    ipcMain.handle('nodes-add', this.addNode.bind(this));
+    ipcMain.handle('nodes-getMany', this.getManyNodes.bind(this));
+    ipcMain.handle('nodes-addOrEdit', this.addNode.bind(this));
     ipcMain.handle('nodes-remove', this.removeNode.bind(this));
     ipcMain.handle('nodes-getName-autocomplete', this.getNameAutocomplete.bind(this));
 
@@ -49,7 +49,8 @@ module.exports = class Nodes {
   }
 
   async getNode(event, request) {
-    return await nodesGet(request);
+    const node = await nodesGet(request);
+    return node;
   }
 
   /**
@@ -58,7 +59,7 @@ module.exports = class Nodes {
    * @param {import('./nodes-getMany').getManyRequest} request 
    */
   async getManyNodes(event, request) {
-    return await nodesGetMany(request);
+    return nodesGetMany(request);
   }
 
   getNameAutocomplete(event, request) {

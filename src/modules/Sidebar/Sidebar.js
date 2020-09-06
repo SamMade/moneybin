@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NodesAddButton from '../Nodes/NodesAddButton/NodesAddButton';
+import NodesAddEditButton from '../Nodes/NodesAddEditButton/NodesAddEditButton';
 import TransactionsAddButton from '../Transactions/TransactionsAddButton/TransactionsAddButton';
 
 export default function Sidebar() {
@@ -22,7 +22,7 @@ export default function Sidebar() {
               <TransactionsAddButton buttonType="transparent" className="pure-menu-link" />
             </li>
             <li className="pure-menu-item">
-              <NodesAddButton buttonType="transparent" className="pure-menu-link" />
+              <NodesAddEditButton buttonType="transparent" className="pure-menu-link" />
             </li>
         </ul>
       </div>

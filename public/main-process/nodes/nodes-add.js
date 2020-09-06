@@ -1,13 +1,10 @@
-const storage = require('../services/storage/storage');
-const logger = require('../services/logger/logger');
+const storage = require("../services/storage/storage");
+const logger = require("../services/logger/logger");
 
 /**
- * @typedef nodesAddRequest
+ * @typedef nodesAddReturn
  * @type {object}
  * @property {string} id
- * @property {string} name
- * @property {string} type
- * @property {boolean} isDefault
  */
 
 /**
@@ -21,31 +18,43 @@ const logger = require('../services/logger/logger');
 /**
  * Add node
  * @param {nodesAddRequest} request
- * @returns {nodesAddReturn}
+ * @returns {nodesAddRequest & nodesAddReturn}
  */
 module.exports = async function nodesAdd(request) {
-  logger.debug('Event - Node to add: ', request);
-  const { uid, ...node } = request;
+  logger.debug("Event - Node to add: ", request);
 
-  if (!node.name) {
-    throw new Error('Missing required field (name)');
-  }
+  const input = !Array.isArray(request) ? [request] : request;
 
-  if (!node.type) {
-    throw new Error('Missing required field (type)');
-  }
+  const mappedRequests = input.map((singleRequest) => {
+    const { uid, ...node } = singleRequest;
 
-  const id = await storage.nodesAdd({
+    if (!node.name) {
+      throw new Error("Missing required field (name)");
+    }
+
+    if (!node.type) {
+      throw new Error("Missing required field (type)");
+    }
+
+    return tranformRequests(node);
+  });
+
+  const ids = await storage.nodesAdd(mappedRequests);
+
+  logger.debug(`Event - Node added with id: ${ids.join(", ")}`);
+
+  return input.map((node, nodeIndex) => ({ ...node, id: ids[nodeIndex] }));
+};
+
+/**
+ * Takes api parameters and transforms them to storage parameters
+ */
+function tranformRequests(node) {
+  return {
+    id: node.id || undefined,
     name: node.name,
     type: node.type,
+    alias: node.alias,
     isDefault: node.isDefault,
-  });
-  logger.debug(`Event - Node added with id: ${id}`);
-  
-  const newNode = {
-    ...node,
-    id,
   };
-
-  return newNode;
 }

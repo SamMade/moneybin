@@ -24,6 +24,12 @@ module.exports = {
     `CREATE TRIGGER IF NOT EXISTS after_Nodes_delete AFTER DELETE ON Nodes BEGIN
       DELETE FROM Nodes_index WHERE rowid = old.id;
     END;`,
+    // Node Aliases
+    `CREATE TABLE IF NOT EXISTS NodesAlias (
+      node INTEGER NOT NULL,
+      alias TEXT NOT NULL,
+      PRIMARY KEY(node, alias)
+    );`,
     // Transactions
     `CREATE TABLE IF NOT EXISTS Transactions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
