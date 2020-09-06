@@ -11,7 +11,14 @@
   margin: 0;
   padding: 0;
   z-index: 1;
+  top: calc(100% - 1px);
+  border: 1px solid #ccc;
+  border-top: 0;
   background-color: white;
+}
+
+.listbox li {
+  padding: 0.5em 0.5em;
 }
 
 .listbox li:hover, .highlight {

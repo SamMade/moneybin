@@ -13,45 +13,57 @@ const logger = require('../services/logger/logger');
  */
 
 /**
- * @param {transactionsAddRequest} request
+ * @param {transactionsAddRequest[]} request
  */
 module.exports = async function transactionsAdd(request) {
   logger.debug('Event - Transaction to add: ', request);
-  const { uid, ...transaction } = request;
+  
+  const input = !Array.isArray(request) ? [request] : request;
+  
+  const mappedRequests = input.map((singleRequest) => {
+    
+    const { uid, ...transaction } = singleRequest;
 
-  if (!transaction.to) {
-    throw new Error('Missing required field (to)');
-  }
+    if (!transaction.to) {
+      throw new Error('Missing required field (to)');
+    }
 
-  if (!transaction.from) {
-    throw new Error('Missing required field (from)');
-  }
+    if (!transaction.from) {
+      throw new Error('Missing required field (from)');
+    }
 
-  if (!transaction.amount) {
-    throw new Error('Missing required field (amount)');
-  }
+    if (!transaction.amount) {
+      throw new Error('Missing required field (amount)');
+    }
 
-  if (!transaction.postDate) {
-    throw new Error('Missing required field (postDate)');
-  }
+    if (!transaction.postDate) {
+      throw new Error('Missing required field (postDate)');
+    }
 
-  if (!moment(transaction.postDate).isValid()) {
-    throw new Error('Date Invalid');
-  }
+    if (!moment(transaction.postDate).isValid()) {
+      throw new Error('Date Invalid');
+    }
 
-  const id = await storage.transactionsAdd({
+    return tranformRequests(transaction);
+  });
+
+  const ids = await storage.transactionsAdd(mappedRequests);
+
+  logger.debug(`Event - Transaction added with id: ${ids.join(", ")}`);
+  
+  return input.map((transaction, transactionIndex) => ({ ...transaction, id: ids[transactionIndex] }));
+}
+
+/**
+ * Takes api parameters and transforms them to storage parameters
+ */
+function tranformRequests(transaction) {
+  return {
+    id: transaction.id || undefined,
     to: transaction.to,
     from: transaction.from,
-    postDate: moment(transaction.postDate).valueOf(),
     amount: transaction.amount,
+    postDate: moment(transaction.postDate).valueOf(),
     notes: transaction.notes,
-  });
-  logger.debug(`Event - Transaction added with id: ${id}`);
-  
-  const newTransaction = {
-    ...transaction,
-    id,
   };
-
-  return newTransaction;
 }

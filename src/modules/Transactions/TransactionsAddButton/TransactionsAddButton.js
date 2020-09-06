@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import TransactionsAddForm from '../TransactionsAddForm/TransactionsAddForm';
+import TransactionsAddEditForm from '../TransactionsAddEditForm/TransactionsAddEditForm';
 import Button from '../../../shared/Button/Button';
 import Modal from '../../../shared/Modal/Modal';
 
@@ -24,7 +24,7 @@ export default function TransactionsAddButton({ buttonType, className }) {
         (isShown
           && (
             <Modal closeHandler={toggleModal}>
-              <TransactionsAddForm />
+              <TransactionsAddEditForm closeHandler={toggleModal} />
             </Modal>
           ))
       }

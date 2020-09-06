@@ -15,7 +15,7 @@ export default function Sidebar() {
             <li className="pure-menu-item"><a href="#" className="pure-menu-link">About</a></li>
 
             <li className="pure-menu-item menu-item-divided pure-menu-selected">
-                <a href="#" className="pure-menu-link">Services</a>
+              <a href="/import">Bulk Import</a>
             </li>
 
             <li className="pure-menu-item menu-item-divided">

@@ -13,12 +13,13 @@ const logger = require("../services/logger/logger");
  * @property {string} name
  * @property {string} type
  * @property {boolean} isDefault
+ * @property {string[]} alias
  */
 
 /**
  * Add node
  * @param {nodesAddRequest} request
- * @returns {nodesAddRequest & nodesAddReturn}
+ * @returns {(nodesAddRequest & nodesAddReturn)[]}
  */
 module.exports = async function nodesAdd(request) {
   logger.debug("Event - Node to add: ", request);

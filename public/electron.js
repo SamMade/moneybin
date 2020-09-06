@@ -7,6 +7,7 @@ global.__basedir = path.resolve(__dirname, '../');
 const sqlite3Adapter = require('./main-process/services/storage/sql/sql');
 const Storage = require('./main-process/services/storage/storage');
 
+const AdminService = new (require('./main-process/admin/admin'))();
 const NodesService = new (require('./main-process/nodes/nodes'))();
 const TransactionsService = new (require('./main-process/transactions/transactions'))();
 
@@ -60,6 +61,7 @@ app.on('ready', () => {
     await Storage.init(sqlite3Adapter);
   
     const initPromises = [
+      AdminService.init(),
       NodesService.init(),
       TransactionsService.init(),
     ];

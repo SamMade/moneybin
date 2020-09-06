@@ -2,10 +2,10 @@ import React from 'react';
 
 import Overview from '../Overview/Overview';
 import Welcome from '../Welcome/Welcome';
-import App from '../App/App';
+import BulkImport from '../Bulk/Import/Import';
 
 export default [
   { path: '/', action: () => <Overview /> },
   { path: '/welcome', action: () => <Welcome /> },
-  { path: '/app', action: () => <App /> },
+  { path: '/import', action: () => <BulkImport /> },
 ];
