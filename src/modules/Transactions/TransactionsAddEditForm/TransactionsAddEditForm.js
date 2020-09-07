@@ -255,7 +255,7 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
             {`${addOrEdit === "edit" ? "Edit" : "Add"} Transaction`}
           </button>
 
-          <button type="button" onClick={closeHandler}>
+          <button type="button" className="pure-button" onClick={closeHandler}>
             Cancel
           </button>
 

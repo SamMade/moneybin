@@ -29,3 +29,12 @@ h4:first-child,
 h5:first-child {
   margin-top: 0;
 }
+
+.sr-only {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}

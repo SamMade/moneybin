@@ -4,7 +4,7 @@ import isEqual from "lodash/isEqual";
 import { uid } from "react-uid";
 import NodesServices from "../../../services/nodes";
 
-import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton'
+import NodesRemoveButton from "../NodesRemoveButton/NodesRemoveButton";
 
 const defaultType = "Person";
 
@@ -101,7 +101,7 @@ export default function NodesAddForm({ editId, closeHandler }) {
 
     setFormFields({
       ...formFields,
-      alias: formFields.alias.filter((_, aliasIndex) => (aliasIndex !== index)),
+      alias: formFields.alias.filter((_, aliasIndex) => aliasIndex !== index),
     });
   };
 
@@ -228,14 +228,13 @@ export default function NodesAddForm({ editId, closeHandler }) {
             {`${addOrEdit === "edit" ? "Edit" : "Add"} Node`}
           </button>
 
-          <button
-            type="button"
-            onClick={closeHandler}
-          >Cancel</button>
+          <button type="button" className="pure-button" onClick={closeHandler}>
+            Cancel
+          </button>
 
-          {
-            (addOrEdit === 'edit' && <NodesRemoveButton id={editId}>Delete</NodesRemoveButton>)
-          }
+          {addOrEdit === "edit" && (
+            <NodesRemoveButton id={editId}>Delete</NodesRemoveButton>
+          )}
         </div>
       </form>
       {isConfirmed && (
