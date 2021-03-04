@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { uid } from "react-uid";
+import React, { useState, useEffect } from 'react';
+import { uid } from 'react-uid';
 import appRuntime from '../../../../services/appRuntime';
 
 export default function BulkImportAssignColumns({
@@ -15,12 +15,12 @@ export default function BulkImportAssignColumns({
 
   useEffect(() => {
     const getPreview = async () => {
-      const fileData = await appRuntime.invoke("transactions-import-preview");
+      const fileData = await appRuntime.invoke('transactions-import-preview');
 
       setLocalState({
         ...localState,
         ...fileData,
-        headerMap: fileData.header.map(() => ""),
+        headerMap: fileData.header.map(() => ''),
         isLoading: false,
       });
     };
@@ -28,6 +28,15 @@ export default function BulkImportAssignColumns({
     setLocalState({ ...localState, isLoading: true });
     getPreview();
   }, []);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    (async () => {
+      await appRuntime.invoke('transactions-import-assignColumns', localState.headerMap);
+      submitHandler();
+    })();
+  }
 
   const ColumnMap = ({ colIndex }) => {
     return (
@@ -52,7 +61,7 @@ export default function BulkImportAssignColumns({
     <div>
       <h1>Bulk Import</h1>
 
-      <form className="pure-form pure-form-aligned" onSubmit={submitHandler}>
+      <form className="pure-form pure-form-aligned" onSubmit={onSubmit}>
         <table>
           <thead>
             <tr>
@@ -69,6 +78,7 @@ export default function BulkImportAssignColumns({
               ))}
             </tr>
           </thead>
+          
           <tbody>
             {
               localState.body.map((line, rowIndex) => (
@@ -104,8 +114,7 @@ function FieldMapOptions() {
   return (
     <>
       <option value="">--Ignore--</option>
-      <option value="to">To</option>
-      <option value="from">From</option>
+      <option value="target">To/From</option>
       <option value="amount">Amount</option>
       <option value="date">Date</option>
       <option value="notes">Notes</option>

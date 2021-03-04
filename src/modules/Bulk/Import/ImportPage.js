@@ -1,33 +1,41 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import Page1 from "./pages/Import-chooseFile";
-import Page2 from "./pages/import-assignColumns";
+import Page1 from './pages/Import-chooseFile';
+import Page2 from './pages/import-assignColumns';
+import Page3 from './pages/import-confirmTargetNodes';
+
+const Pages = [Page1, Page2, Page3];
 
 export default function ImportPage({ closeHandler }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <>
-      {currentPage === 1 && (
-        <Page1
-          closeHandler={closeHandler}
-          submitHandler={(event) => {
-            event.preventDefault();
-            setCurrentPage(2);
-          }}
-        />
-      )}
-      {currentPage === 2 && (
-        <Page2
-          closeHandler={() => {
-            setCurrentPage(1);
-          }}
-          submitHandler={(event) => {
-            event.preventDefault();
-            setCurrentPage(3);
-          }}
-        />
-      )}
+      {
+        React.createElement(Pages[currentPage - 1], {
+          closeHandler: () => {
+            if (currentPage === 1) { 
+              closeHandler();
+              return; 
+            }
+            setCurrentPage(currentPage - 1);
+          },
+          submitHandler: (evt) => {
+            if (evt) { evt.preventDefault(); }
+
+            setCurrentPage(currentPage + 1);
+          },
+        })
+      }
     </>
   );
 }
+
+ImportPage.propTypes = {
+  closeHandler: PropTypes.func,
+};
+
+ImportPage.defaultProps = {
+  closeHandler: () => {},
+};

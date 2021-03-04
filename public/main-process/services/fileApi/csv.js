@@ -1,15 +1,16 @@
-const fileApi = require("./fileApi");
-const logger = require("../logger/logger");
+const fileApi = require('./fileApi');
+const logger = require('../logger/logger');
 
 module.exports = class CSV extends fileApi {
   constructor() {
     super();
 
     this.headers = [];
+    this.data = [];
   }
 
   async getHeaders() {
-    logger.debug("CSV - getHeaders");
+    logger.debug('CSV - getHeaders');
     if (!this.headers.length) {
       await this.parseHeaders();
     }
@@ -17,8 +18,17 @@ module.exports = class CSV extends fileApi {
     return this.headers;
   }
 
+  async getContent() {
+    logger.debug('CSV - getContent');
+    if (!this.data.length) {
+      await this.load();
+    }
+
+    return this.data;
+  }
+
   async preview(lines = 10) {
-    logger.debug("CSV - preview");
+    logger.debug('CSV - preview');
 
     const fileLines = await this.getFile({ maxLines: lines + 1 });
 
@@ -32,6 +42,20 @@ module.exports = class CSV extends fileApi {
     };
   }
 
+  async load() {
+    logger.debug('CSV - load');
+
+    const fileLines = await this.getFile();
+
+    const csvLines = fileLines.map((line) => this.parseCsvLine(line));
+
+    csvLines.splice(0, 1);
+
+    this.data = csvLines;
+
+    logger.debug(`Loading ${csvLines.length} lines`);
+  }
+
   /**
    * @private
    */
@@ -41,20 +65,20 @@ module.exports = class CSV extends fileApi {
   }
 
   /**
-   *
+   * Parse Line as CSV
    * @private
    * @param {string} line the line to parse
    */
   parseCsvLine(line) {
     const objPattern = new RegExp(
       '(\\,|\\r?\\n|\\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^\\,\\r\\n]*))',
-      "gi"
+      'gi'
     );
     const isMatch = line.match(objPattern);
     if (!isMatch) return [line];
 
     return isMatch.map((cell) => {
-      const noQuotes = cell.replaceAll(/^(,\"|,|\")|\"$/g, "");
+      const noQuotes = cell.replaceAll(/^(,\"|,|\")|\"$/g, '');
       return noQuotes;
     });
   }

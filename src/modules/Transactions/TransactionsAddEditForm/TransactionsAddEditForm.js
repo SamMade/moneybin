@@ -1,31 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import isEqual from "lodash/isEqual";
-import { uid } from "react-uid";
-import moment from "moment";
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
+import { uid } from 'react-uid';
+import moment from 'moment';
 
-import NodesServices from "../../../services/nodes";
-import TransactionsServices from "../../../services/transactions";
+import NodesServices from '../../../services/nodes';
+import TransactionsServices from '../../../services/transactions';
 
-import Autocomplete from "../../../shared/Autocomplete/Autocomplete";
-import Calendar from "../../../shared/Calendar/Calendar";
+import Autocomplete from '../../../shared/Autocomplete/Autocomplete';
+import Calendar from '../../../shared/Calendar/Calendar';
 
-import styles from "./TransactionsAddEditForm.module.css";
+import styles from './TransactionsAddEditForm.module.css';
 
-const dateFormat = "MM-DD-YYYY";
+const dateFormat = 'MM-DD-YYYY';
 
 const resetFields = {
-  from: "",
-  to: "",
-  datePretty: "",
-  postDate: "",
-  amount: "",
-  notes: "",
+  from: '',
+  to: '',
+  datePretty: '',
+  postDate: '',
+  amount: '',
+  notes: '',
 };
 
 // autocomplete names
 const autocompleteName = async (name) => {
-  console.log("autocomplete");
+  console.log('autocomplete');
   const list = await NodesServices.getNameAutocomplete(name);
   if (!list) {
     return null;
@@ -36,7 +36,7 @@ const autocompleteName = async (name) => {
 
 export default function TransactionsAddEditForm({ editId, closeHandler }) {
   const origFields = useRef(resetFields);
-  const [addOrEdit, setAddOrEdit] = useState("add");
+  const [addOrEdit, setAddOrEdit] = useState('add');
   const [isConfirmed, setIsConfirmed] = useState(null);
   const [toggleCalendar, setToggleCalendar] = useState(false);
   const toggleCalendarTimeoutId = useRef();
@@ -46,19 +46,19 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
 
   // Edit or Add
   useEffect(() => {
-    if (!editId && addOrEdit !== "add") {
-      setAddOrEdit("add");
+    if (!editId && addOrEdit !== 'add') {
+      setAddOrEdit('add');
       return;
     }
 
-    if (editId && addOrEdit !== "edit") {
-      setAddOrEdit("edit");
+    if (editId && addOrEdit !== 'edit') {
+      setAddOrEdit('edit');
     }
   }, [editId]);
 
   // Edit Initializer
   useEffect(() => {
-    if (addOrEdit === "edit") {
+    if (addOrEdit === 'edit') {
       (async () => {
         const transactions = await TransactionsServices.getTransaction({
           id: editId,
@@ -92,7 +92,7 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
       return;
     }
 
-    if (addOrEdit === "edit") {
+    if (addOrEdit === 'edit') {
       closeHandler();
       return;
     }
@@ -102,14 +102,14 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    console.info("TransactionsAddEditForm - clicked");
+    console.info('TransactionsAddEditForm - clicked');
 
     setIsConfirmed(null);
 
     try {
       const receipt = await TransactionsServices.addTransactions([
         {
-          ...(addOrEdit === "edit" && { id: editId }),
+          ...(addOrEdit === 'edit' && { id: editId }),
           ...formFields,
         },
       ]);
@@ -140,12 +140,12 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
 
   return (
     <div>
-      <h1>{`${addOrEdit === "edit" ? "Edit" : "Add"} Transaction`}</h1>
+      <h1>{`${addOrEdit === 'edit' ? 'Edit' : 'Add'} Transaction`}</h1>
       <form className="pure-form pure-form-aligned" onSubmit={submitHandler}>
         <div className="pure-control-group">
-          <label htmlFor={uid("From")}>From:</label>
+          <label htmlFor={uid('From')}>From:</label>
           <Autocomplete
-            id={uid("From")}
+            id={uid('From')}
             onOptions={autocompleteName}
             onChange={(event) => {
               setFormFields({
@@ -157,9 +157,9 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
         </div>
 
         <div className="pure-control-group">
-          <label htmlFor={uid("To")}>To:</label>
+          <label htmlFor={uid('To')}>To:</label>
           <Autocomplete
-            id={uid("To")}
+            id={uid('To')}
             onOptions={autocompleteName}
             onChange={(event) => {
               setFormFields({
@@ -171,7 +171,7 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
         </div>
 
         <div
-          className={`pure-control-group ${styles["date-group"]}`}
+          className={`pure-control-group ${styles['date-group']}`}
           onFocus={() => {
             clearTimeout(toggleCalendarTimeoutId.current);
             setToggleCalendar(true);
@@ -182,9 +182,9 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
             });
           }}
         >
-          <label htmlFor={uid("DatePretty")}>Date:</label>
+          <label htmlFor={uid('DatePretty')}>Date:</label>
           <input
-            id={uid("DatePretty")}
+            id={uid('DatePretty')}
             type="text"
             value={formFields.datePretty}
             onChange={(event) => {
@@ -197,13 +197,13 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
           <input
             hidden
             readOnly
-            id={uid("Date")}
+            id={uid('Date')}
             type="text"
             value={formFields.postDate}
           />
           {toggleCalendar && (
             <Calendar
-              className={`${styles["date-calendar"]}`}
+              className={`${styles['date-calendar']}`}
               value={formFields.postDate}
               onChange={(date) =>
                 setFormFields({
@@ -216,25 +216,25 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
         </div>
 
         <div className="pure-control-group">
-          <label htmlFor={uid("Amount")}>Amount:</label>
+          <label htmlFor={uid('Amount')}>Amount:</label>
           <input
-            id={uid("Amount")}
+            id={uid('Amount')}
             type="text"
             value={formFields.amount}
             onChange={(event) => {
               const filter = /[^0-9.]/gi;
               setFormFields({
                 ...formFields,
-                amount: event.target.value.replace(filter, ""),
+                amount: event.target.value.replace(filter, ''),
               });
             }}
           />
         </div>
 
         <div className="pure-control-group">
-          <label htmlFor={uid("Notes")}>Notes:</label>
+          <label htmlFor={uid('Notes')}>Notes:</label>
           <textarea
-            id={uid("Notes")}
+            id={uid('Notes')}
             type="text"
             value={formFields.notes}
             onChange={(event) => {
@@ -252,7 +252,7 @@ export default function TransactionsAddEditForm({ editId, closeHandler }) {
             className="pure-button pure-button-primary"
             disabled={disableSubmit}
           >
-            {`${addOrEdit === "edit" ? "Edit" : "Add"} Transaction`}
+            {`${addOrEdit === 'edit' ? 'Edit' : 'Add'} Transaction`}
           </button>
 
           <button type="button" className="pure-button" onClick={closeHandler}>

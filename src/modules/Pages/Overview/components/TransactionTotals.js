@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
-import isEmpty from "lodash/isEmpty";
+import React, { useEffect, useState, useContext } from 'react';
+import isEmpty from 'lodash/isEmpty';
 
-import NodesServices from "../../../../services/nodes";
-import TransactionsServices from "../../../../services/transactions";
-import GlobalContext from "../../../../services/globalContext/globalContext";
-import { uid } from "react-uid";
+import NodesServices from '../../../../services/nodes';
+import TransactionsServices from '../../../../services/transactions';
+import GlobalContext from '../../../../services/globalContext/globalContext';
+import { uid } from 'react-uid';
 
 async function getData(start, end) {
   const nodesApi = await NodesServices.getManyNodes({
-    filter: "eq(isDefault, 1)",
+    filter: 'eq(isDefault, 1)',
   });
 
   if (!nodesApi || isEmpty(nodesApi)) {
@@ -18,12 +18,12 @@ async function getData(start, end) {
   const transactionsApi = await TransactionsServices.getManyTransactions({
     filter: [
       `gte(postDate, ${start}) and lte(postDate, ${end})`,
-      "and (",
-      `in(source, ${nodesApi.map((node) => node.id).join(", ")})`,
-      "or",
-      `in(target, ${nodesApi.map((node) => node.id).join(", ")})`,
-      ")",
-    ].join(" "),
+      'and (',
+      `in(source, ${nodesApi.map((node) => node.id).join(', ')})`,
+      'or',
+      `in(target, ${nodesApi.map((node) => node.id).join(', ')})`,
+      ')',
+    ].join(' '),
   });
 
   return [nodesApi, transactionsApi];

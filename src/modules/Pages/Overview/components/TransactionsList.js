@@ -34,6 +34,13 @@ export default function TransactionsList() {
   return (
     <>
       <h2>Recent Transactions</h2>
+
+      {
+        allTransactions && !allTransactions.length && (
+          <span>No Transactions</span>
+        )
+      }
+
       <ul>
         {
           allTransactions.map((transaction, index) => (

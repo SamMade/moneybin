@@ -9,6 +9,10 @@ export default function Overview() {
   const [globalState, globalDispatch] = useContext(GlobalContext);
 
   const timeframePick = (monthsBack, text) => {
+    if (monthsBack < 0) {
+
+    }
+
     const start = moment().startOf('month').subtract(monthsBack, 'month').valueOf();
     const end = moment().endOf('day').valueOf();
 

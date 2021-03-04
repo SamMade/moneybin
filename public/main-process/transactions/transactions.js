@@ -15,8 +15,11 @@ module.exports = class Transactions {
     ipcMain.handle('transactions-get', this.getTransaction.bind(this));
     ipcMain.handle('transactions-add', this.addTransaction.bind(this));
     ipcMain.handle('transactions-remove', this.removeTransaction.bind(this));
-    ipcMain.handle('transactions-import-setFile', this.setFilePath.bind(this));
-    ipcMain.handle('transactions-import-preview', this.getFilePreview.bind(this));
+    // import
+    ipcMain.handle('transactions-import-setFile', this.setImportFilePath.bind(this));
+    ipcMain.handle('transactions-import-preview', this.getImportFilePreview.bind(this));
+    ipcMain.handle('transactions-import-assignColumns', this.setImportColumns.bind(this));
+    ipcMain.handle('transactions-import-requestTargets', this.getImportTargetMatches.bind(this));
 
     this.bulkImport = null;
 
@@ -45,18 +48,18 @@ module.exports = class Transactions {
   }
 
   async getTransaction(event, request) {
-    return await transactionsGet(request);
+    return transactionsGet(request);
   }
 
   async getManyTransactions(event, request) {
-    return await transactionsGetMany(request);
+    return transactionsGetMany(request);
   }
 
   /**
    * Opens File Dialog to choose file
    * @returns {{canceled: boolean, filePaths: string[]}} path of the file chosen
    */
-  async setFilePath(event, request) {
+  async setImportFilePath(event, request) {
     try {
       const filePaths = await transactionsGetFilePath();
       if (!filePaths || filePaths.canceled) {
@@ -64,9 +67,9 @@ module.exports = class Transactions {
       }
 
       this.bulkImport = new TransactionsImport();
-      return await this.bulkImport.setFilePath(filePaths.filePaths[0])
+      return this.bulkImport.setFilePath(filePaths.filePaths[0])
     } catch (e) {
-      return e;
+      throw e;
     }
   }
 
@@ -74,12 +77,36 @@ module.exports = class Transactions {
    * Opens File Dialog to choose file
    * @returns {{canceled: boolean, filePaths: string[]}} path of the file chosen
    */
-  async getFilePreview(event, request) {
+  async getImportFilePreview(event, request) {
     try {
-      const preview = await this.bulkImport.preview()
-      return preview;
+      return this.bulkImport.preview();
     } catch (e) {
-      return e;
+      throw e;
+    }
+  }
+
+  /**
+   * Assigns column mappings
+   */
+  async setImportColumns(event, request) {
+    try {
+      await this.bulkImport.setColumnMapping(request);
+      return;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /**
+   * Gets potential matches
+   * @param {*} event 
+   * @param {*} request 
+   */
+  async getImportTargetMatches(event, request) {
+    try {
+      return this.bulkImport.getTargetMatches();
+    } catch (e) {
+      throw e;
     }
   }
 }

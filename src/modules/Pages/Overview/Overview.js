@@ -32,6 +32,7 @@ export default function Overview() {
           <h2>Transactions</h2>
           <TransactionsList />
         </div>
+  
         <div className="pure-u-1-2">
           <h2>Nodes</h2>
           <NodesList />

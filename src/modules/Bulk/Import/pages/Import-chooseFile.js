@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { uid } from "react-uid";
+import React, { useState } from 'react';
+import { uid } from 'react-uid';
 import appRuntime from '../../../../services/appRuntime';
 
 export default function BulkImportChooseFile({ closeHandler, submitHandler }) {
   const [filePath, setFilePath] = useState();
 
   const openFileHandler = async () => {
-    const response = await appRuntime.invoke("transactions-import-setFile");
+    const response = await appRuntime.invoke('transactions-import-setFile');
     if (!response || response.canceled) {
       return;
     }
@@ -20,11 +20,11 @@ export default function BulkImportChooseFile({ closeHandler, submitHandler }) {
 
       <form className="pure-form pure-form-aligned" onSubmit={submitHandler}>
         <div className="pure-control-group">
-          <label htmlFor={uid("file")}>File:</label>
+          <label htmlFor={uid('file')}>File:</label>
           <button type="button" onClick={openFileHandler}>
             Choose File
-          </button>{" "}
-          {filePath || "No file chosen"}
+          </button>{' '}
+          {filePath || 'No file chosen'}
         </div>
 
         <div className="pure-controls">

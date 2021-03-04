@@ -1,8 +1,8 @@
-const { promisify } = require("util");
-const { once } = require("events");
-const fs = require("fs");
-const readline = require("readline");
-const logger = require("../logger/logger");
+const { promisify } = require('util');
+const { once } = require('events');
+const fs = require('fs');
+const readline = require('readline');
+const logger = require('../logger/logger');
 
 const lstat = promisify(fs.lstat);
 
@@ -12,7 +12,7 @@ module.exports = class FileImporter {
   }
 
   async setFilePath(path) {
-    logger.debug("FileImporter - setFilePath");
+    logger.debug('FileImporter - setFilePath');
 
     const fileStat = await lstat(path);
 
@@ -25,8 +25,13 @@ module.exports = class FileImporter {
     return this.filePath;
   }
 
-  async getFile({ maxLines }) {
-    logger.debug("FileImporter - getFile");
+  /**
+   * 
+   * @param {object} params 
+   * @property {number} params.maxLines number of lines to parse, enter 0 for all
+   */
+  async getFile({ maxLines } = {}) {
+    logger.debug('FileImporter - getFile');
 
     if (!this.filePath) {
       logger.info(`Invalid path: ${this.filePath}`);
@@ -40,7 +45,7 @@ module.exports = class FileImporter {
 
     let lineCounter = 0;
     const wantedLines = [];
-    readInterface.on("line", function (line) {
+    readInterface.on('line', function (line) {
       lineCounter += 1;
       wantedLines.push(line);
 
@@ -50,7 +55,7 @@ module.exports = class FileImporter {
       }
     });
 
-    await once(readInterface, "close");
+    await once(readInterface, 'close');
 
     return wantedLines;
   }

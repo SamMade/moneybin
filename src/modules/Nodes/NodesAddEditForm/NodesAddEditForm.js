@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import isEqual from "lodash/isEqual";
-import { uid } from "react-uid";
-import NodesServices from "../../../services/nodes";
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
+import { uid } from 'react-uid';
+import NodesServices from '../../../services/nodes';
 
-import NodesRemoveButton from "../NodesRemoveButton/NodesRemoveButton";
+import NodesRemoveButton from '../NodesRemoveButton/NodesRemoveButton';
 
-const defaultType = "Person";
+const defaultType = 'Person';
 
 const resetFields = {
-  name: "",
+  name: '',
   type: defaultType,
   isDefault: false,
   alias: [],
@@ -17,7 +17,7 @@ const resetFields = {
 
 export default function NodesAddForm({ editId, closeHandler }) {
   const origFields = useRef(resetFields);
-  const [addOrEdit, setAddOrEdit] = useState("add");
+  const [addOrEdit, setAddOrEdit] = useState('add');
   const [isConfirmed, setIsConfirmed] = useState(null);
   const [disableSubmit, setDisableSubmit] = useState(true);
   // form fields
@@ -25,19 +25,19 @@ export default function NodesAddForm({ editId, closeHandler }) {
 
   // Edit or Add
   useEffect(() => {
-    if (!editId && addOrEdit !== "add") {
-      setAddOrEdit("add");
+    if (!editId && addOrEdit !== 'add') {
+      setAddOrEdit('add');
       return;
     }
 
-    if (editId && addOrEdit !== "edit") {
-      setAddOrEdit("edit");
+    if (editId && addOrEdit !== 'edit') {
+      setAddOrEdit('edit');
     }
   }, [editId]);
 
   // Edit Initializer
   useEffect(() => {
-    if (addOrEdit === "edit") {
+    if (addOrEdit === 'edit') {
       (async () => {
         const nodes = await NodesServices.getNode({
           id: editId,
@@ -69,7 +69,7 @@ export default function NodesAddForm({ editId, closeHandler }) {
       return;
     }
 
-    if (addOrEdit === "edit") {
+    if (addOrEdit === 'edit') {
       closeHandler();
       return;
     }
@@ -90,7 +90,7 @@ export default function NodesAddForm({ editId, closeHandler }) {
   const addAliasHandler = () => {
     setFormFields({
       ...formFields,
-      alias: formFields.alias.concat([""]),
+      alias: formFields.alias.concat(['']),
     });
   };
 
@@ -107,14 +107,14 @@ export default function NodesAddForm({ editId, closeHandler }) {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    console.info("NodesAddForm - clicked");
+    console.info('NodesAddForm - clicked');
 
     setIsConfirmed(null);
 
     try {
       const receipt = await NodesServices.addOrEditNodes([
         {
-          ...(addOrEdit === "edit" && { id: editId }),
+          ...(addOrEdit === 'edit' && { id: editId }),
           ...formFields,
         },
       ]);
@@ -135,12 +135,12 @@ export default function NodesAddForm({ editId, closeHandler }) {
 
   return (
     <div>
-      <h1>{`${addOrEdit === "edit" ? "Edit" : "Add"} Node`}</h1>
+      <h1>{`${addOrEdit === 'edit' ? 'Edit' : 'Add'} Node`}</h1>
       <form className="pure-form pure-form-aligned" onSubmit={submitHandler}>
         <div className="pure-control-group">
-          <label htmlFor={uid("name")}>Name:</label>
+          <label htmlFor={uid('name')}>Name:</label>
           <input
-            id={uid("name")}
+            id={uid('name')}
             type="text"
             value={formFields.name}
             onChange={(event) => {
@@ -153,9 +153,9 @@ export default function NodesAddForm({ editId, closeHandler }) {
         </div>
 
         <div className="pure-control-group">
-          <label htmlFor={uid("type")}>Type:</label>
+          <label htmlFor={uid('type')}>Type:</label>
           <select
-            id={uid("type")}
+            id={uid('type')}
             value={formFields.type}
             onChange={(event) => {
               setFormFields({
@@ -172,9 +172,9 @@ export default function NodesAddForm({ editId, closeHandler }) {
         </div>
 
         <div className="pure-control-group">
-          <label htmlFor={uid("Default")}>Default:</label>
+          <label htmlFor={uid('Default')}>Default:</label>
           <input
-            id={uid("Default")}
+            id={uid('Default')}
             type="checkbox"
             checked={formFields.isDefault}
             onChange={(event) => {
@@ -195,14 +195,14 @@ export default function NodesAddForm({ editId, closeHandler }) {
 
           {formFields.alias.map((alias, aliasIndex) => (
             <div
-              key={uid(`aliaskey`, aliasIndex)}
+              key={uid('aliaskey', aliasIndex)}
               className="pure-control-group"
             >
-              <label htmlFor={uid("Alias", aliasIndex)}>
+              <label htmlFor={uid('Alias', aliasIndex)}>
                 Aliases #{aliasIndex + 1}:
               </label>
               <input
-                id={uid("Alias", aliasIndex)}
+                id={uid('Alias', aliasIndex)}
                 type="text"
                 value={alias}
                 onChange={(event) => {
@@ -225,20 +225,20 @@ export default function NodesAddForm({ editId, closeHandler }) {
             className="pure-button pure-button-primary"
             disabled={disableSubmit}
           >
-            {`${addOrEdit === "edit" ? "Edit" : "Add"} Node`}
+            {`${addOrEdit === 'edit' ? 'Edit' : 'Add'} Node`}
           </button>
 
           <button type="button" className="pure-button" onClick={closeHandler}>
             Cancel
           </button>
 
-          {addOrEdit === "edit" && (
+          {addOrEdit === 'edit' && (
             <NodesRemoveButton id={editId}>Delete</NodesRemoveButton>
           )}
         </div>
       </form>
       {isConfirmed && (
-        <span>{`...${addOrEdit === "edit" ? "Edit" : "Add"}ed`}</span>
+        <span>{`...${addOrEdit === 'edit' ? 'Edit' : 'Add'}ed`}</span>
       )}
     </div>
   );
