@@ -4,7 +4,7 @@ import GlobalContext from '../../services/globalContext/globalContext';
 import { appReducer, appReducerInit } from './App-reducer';
 import Router from '../Router/Router';
 
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../../services/appRuntime';
 
 function App() {
   const [state, dispatch] = useReducer(appReducer, appReducerInit);
@@ -21,10 +21,10 @@ function App() {
   };
 
   useEffect(() => {
-    ipcRenderer.on('server-event', dispatchEvent);
+    const subscription = appRuntime.subscribe('server-event', dispatchEvent);
 
     return () => {
-      ipcRenderer.removeListener('server-event', dispatchEvent);
+      subscription();
     };
   }, []);
 

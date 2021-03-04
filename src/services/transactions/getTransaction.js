@@ -1,5 +1,5 @@
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../appRuntime';
 
 export default async function getTransaction(id) {
-  await ipcRenderer.send('transactions-get', id);
+  await appRuntime.send('transactions-get', id);
 };

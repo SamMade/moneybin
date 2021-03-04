@@ -1,5 +1,5 @@
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../../services/appRuntime';
 
 export default async function getNameAutocomplete(match) {
-  return await ipcRenderer.invoke('nodes-getName-autocomplete', match);
+  return appRuntime.invoke('nodes-getName-autocomplete', match);
 };

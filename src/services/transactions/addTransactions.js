@@ -1,5 +1,5 @@
 import { uid } from 'react-uid';
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../../services/appRuntime';
 
 export default async function addTransactions(transaction) {
   if (!transaction.to) {
@@ -21,5 +21,5 @@ export default async function addTransactions(transaction) {
     uid: receipt,
   };
 
-  return await ipcRenderer.invoke('transactions-add', payload);
+  return appRuntime.invoke('transactions-add', payload);
 };

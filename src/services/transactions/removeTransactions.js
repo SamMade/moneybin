@@ -1,5 +1,5 @@
 import { uid } from 'react-uid';
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../appRuntime';
 
 export default async function removeNodes(nodeId) {
   if (!nodeId) {
@@ -12,5 +12,5 @@ export default async function removeNodes(nodeId) {
     uid: receipt,
   };
 
-  return await ipcRenderer.invoke('nodes-remove', payload);
+  return appRuntime.invoke('nodes-remove', payload);
 };

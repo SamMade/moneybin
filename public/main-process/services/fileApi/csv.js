@@ -4,7 +4,6 @@ const logger = require("../logger/logger");
 module.exports = class CSV extends fileApi {
   constructor() {
     super();
-    // this.parseCsvLine = this.parseCsvLine.bind(this);
 
     this.headers = [];
   }

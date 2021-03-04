@@ -23,9 +23,11 @@ function createWindow () {
     resizable: true,
     show: false,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: __dirname + '/preload.js',
     }
-  })
+  });
 
   // and load the index.html of the app.
   // mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'))

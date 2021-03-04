@@ -1,6 +1,5 @@
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../../services/appRuntime';
 
 export default async function getManyNodes(request) {
-  const output = await ipcRenderer.invoke('nodes-getMany', request);
-  return output;
+  return appRuntime.invoke('nodes-getMany', request);
 };

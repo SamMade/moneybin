@@ -7,13 +7,19 @@ const logger = require('../../logger/logger');
 module.exports = function methodValidate(methodObj) {
   switch (methodObj.method) {
     case 'eq':
-      if (methodObj.parameters.length !== 2) {
+      if (
+        (methodObj.parameters.length !== 2)
+        || (methodObj.parameters.length !== 1)
+      ) {
         logger.error('Method (eq): requires only 2 parameters')
         throw new Error('METHOD_INVALID_INPUT');
       }
       break;
     case 'neq':
-      if (methodObj.parameters.length !== 2) {
+      if (
+        (methodObj.parameters.length !== 2)
+        || (methodObj.parameters.length !== 1)
+      ) {
         logger.error('Method (neq): requires only 2 parameters')
         throw new Error('METHOD_INVALID_INPUT');
       }

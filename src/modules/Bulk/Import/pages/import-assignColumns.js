@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { uid } from "react-uid";
-const { ipcRenderer } = window.require("electron");
+import appRuntime from '../../../../services/appRuntime';
 
 export default function BulkImportAssignColumns({
   closeHandler,
@@ -15,7 +15,7 @@ export default function BulkImportAssignColumns({
 
   useEffect(() => {
     const getPreview = async () => {
-      const fileData = await ipcRenderer.invoke("file-preview");
+      const fileData = await appRuntime.invoke("transactions-import-preview");
 
       setLocalState({
         ...localState,

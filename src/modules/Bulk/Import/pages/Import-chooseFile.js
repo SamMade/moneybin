@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { uid } from "react-uid";
-const { ipcRenderer } = window.require("electron");
+import appRuntime from '../../../../services/appRuntime';
 
 export default function BulkImportChooseFile({ closeHandler, submitHandler }) {
   const [filePath, setFilePath] = useState();
 
   const openFileHandler = async () => {
-    const response = await ipcRenderer.invoke("file-open");
+    const response = await appRuntime.invoke("transactions-import-setFile");
     if (!response || response.canceled) {
       return;
     }

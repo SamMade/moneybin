@@ -1,5 +1,5 @@
 import { uid } from 'react-uid';
-const { ipcRenderer } = window.require('electron');
+import appRuntime from '../../services/appRuntime';
 
 export default async function addOrEditNodes(nodes) {
   const requests = nodes.map((node) => {
@@ -17,7 +17,7 @@ export default async function addOrEditNodes(nodes) {
       uid: receipt,
     };
   
-    return ipcRenderer.invoke('nodes-addOrEdit', payload);
+    return appRuntime.invoke('nodes-addOrEdit', payload);
   });
 
   return Promise.all(requests);

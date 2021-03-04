@@ -3,6 +3,9 @@ const logger = require('../../logger/logger');
 module.exports = function transformEquation(methodObj) {
   switch (methodObj.method) {
     case 'eq':
+      if (methodObj.parameters.length === 1) {
+        return [`${methodObj.parameters[0]} = 1 `];
+      }
       return [`${methodObj.parameters[0]} = ? `, [valueWithCorrectType(methodObj.parameters[1])]];
     case 'neq':
       return [`${methodObj.parameters[0]} <> ? `, [valueWithCorrectType(methodObj.parameters[1])]];
