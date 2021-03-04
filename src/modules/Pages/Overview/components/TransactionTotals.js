@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import isEmpty from "lodash/isEmpty";
 
-import NodesServices from "../../../services/nodes";
-import TransactionsServices from "../../../services/transactions";
-import GlobalContext from "../../../services/globalContext/globalContext";
+import NodesServices from "../../../../services/nodes";
+import TransactionsServices from "../../../../services/transactions";
+import GlobalContext from "../../../../services/globalContext/globalContext";
 import { uid } from "react-uid";
 
 async function getData(start, end) {

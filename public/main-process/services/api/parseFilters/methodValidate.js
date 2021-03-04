@@ -9,7 +9,7 @@ module.exports = function methodValidate(methodObj) {
     case 'eq':
       if (
         (methodObj.parameters.length !== 2)
-        || (methodObj.parameters.length !== 1)
+        && (methodObj.parameters.length !== 1)
       ) {
         logger.error('Method (eq): requires only 2 parameters')
         throw new Error('METHOD_INVALID_INPUT');
@@ -18,7 +18,7 @@ module.exports = function methodValidate(methodObj) {
     case 'neq':
       if (
         (methodObj.parameters.length !== 2)
-        || (methodObj.parameters.length !== 1)
+        && (methodObj.parameters.length !== 1)
       ) {
         logger.error('Method (neq): requires only 2 parameters')
         throw new Error('METHOD_INVALID_INPUT');

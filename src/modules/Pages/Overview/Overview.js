@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
-import Layout from '../Layout/SidebarMain';
-import Sidebar from '../Sidebar/Sidebar';
+import Layout from '../../Layout/SidebarMain';
+import Sidebar from '../../Sidebar/Sidebar';
 
-import NodesList from '../Nodes/NodesList/NodesList';
+import NodesList from '../../Nodes/NodesList/NodesList';
 import TimeframePicker from './components/TimeframePicker';
 import TransactionsList from './components/TransactionsList';
 import TransactionsFlow from './components/TransactionFlow';

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { uid } from 'react-uid';
 import moment from 'moment';
-import TransactionsServices from '../../../services/transactions';
-import NodesServices from '../../../services/nodes';
-import GlobalContext from '../../../services/globalContext/globalContext';
+import TransactionsServices from '../../../../services/transactions';
+import NodesServices from '../../../../services/nodes';
+import GlobalContext from '../../../../services/globalContext/globalContext';
 
 async function getData(start, end) {
   const transactionsApi = TransactionsServices.getManyTransactions({

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 
-import GlobalContext from '../../../services/globalContext/globalContext';
+import GlobalContext from '../../../../services/globalContext/globalContext';
 
-import Button from '../../../shared/Button/Button';
+import Button from '../../../../shared/Button/Button';
 
 export default function Overview() {
   const [globalState, globalDispatch] = useContext(GlobalContext);

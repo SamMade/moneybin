@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState, useContext } from 'react';
 
-import NodesServices from '../../../services/nodes';
-import TransactionsServices from '../../../services/transactions';
-import GlobalContext from '../../../services/globalContext/globalContext';
+import NodesServices from '../../../../services/nodes';
+import TransactionsServices from '../../../../services/transactions';
+import GlobalContext from '../../../../services/globalContext/globalContext';
 
-import SankeyGraph from '../../../shared/Charts/Sankey/Sankey';
+import SankeyGraph from '../../../../shared/Charts/Sankey/Sankey';
 
 async function getData(start, end) {
   const transactionsApi = TransactionsServices.getManyTransactions({
