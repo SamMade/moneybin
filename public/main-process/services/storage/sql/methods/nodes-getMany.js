@@ -1,10 +1,12 @@
 const { promisify } = require('util');
 const has = require('lodash/has');
-const logger = require('../services/logger/logger');
+
 const apiFilter = require('../services/api/setFilters/setFilters');
 const apiSort = require('../services/api/setSort/setSort');
 
-module.exports = async function SqlNodesGetMany(db, request) {
+const loggerContext = { service: 'Storage/sqlite/nodesGetMany' };
+
+module.exports = async function SqlNodesGetMany({ logger, db, ...request }) {
   let parameters = [];
   let query = 'SELECT * FROM Nodes';
 
@@ -28,7 +30,11 @@ module.exports = async function SqlNodesGetMany(db, request) {
     query += ` ORDER BY ${apiSort(request.sort)}`;
   }
 
-  logger.debug(`SQL query: ${query}`);
+  logger.debug(`SQL query: ${query}`, loggerContext);
 
-  return await promisify(db.all.bind(db))(query, parameters);
+  const output = await promisify(db.all.bind(db))(query, parameters);
+
+  logger.info(`Obtained ${output.length} nodes`, loggerContext);
+
+  return output;
 }

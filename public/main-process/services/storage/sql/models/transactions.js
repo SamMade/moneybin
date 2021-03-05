@@ -2,7 +2,7 @@
  * key = api produced
  * value = sql field
  */
-export default {
+const transactionsMap = Object.freeze({
   Transaction: 'Transactions',
   id: 'id',
   to: 'target',
@@ -11,4 +11,5 @@ export default {
   postDate: 'postDate',
   isRecurring: 'isRecurring',
   notes: 'notes',
-};
+})
+export default transactionsMap;

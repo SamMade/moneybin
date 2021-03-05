@@ -1,8 +1,20 @@
 const storage = require('../services/storage/storage');
 const logger = require('../services/logger/logger');
 
+const loggerContext = { service: 'Nodes/nodesRemove' };
+
+/**
+ * @typedef {object} removeRequest
+ * @property {string} uid unique id for transaction
+ * @property {string} nodeId node id to remove
+ */
+
+/**
+ * @param {removeRequest} request 
+ */
 module.exports = async function nodesRemove(request) {
-  logger.debug('Node to remove: ', request);
+  logger.debug(JSON.stringify(request), loggerContext);
+
   const { uid, nodeId } = request;
 
   if (!nodeId) {
@@ -11,7 +23,8 @@ module.exports = async function nodesRemove(request) {
 
   // add to db
   await storage.nodesRemove(nodeId);
-  logger.debug(`Event - Node Removed (${nodeId})`);
+
+  logger.info(`Node Removed (${nodeId})`, loggerContext);
 
   return nodeId;
 }

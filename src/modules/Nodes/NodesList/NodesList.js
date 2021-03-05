@@ -27,11 +27,10 @@ export default function NodesList() {
     (async function() {
       const list = await NodesServices.getNameAutocomplete(filter);
       if (list && list.length) {
-        setFilteredNodes(list.map((orig) => ({...orig, id: orig.rowid})));
+        setFilteredNodes(list);
       } else {
         setFilteredNodes(null);
       }
-      console.log(list);
     })()
   }, [filter])
 

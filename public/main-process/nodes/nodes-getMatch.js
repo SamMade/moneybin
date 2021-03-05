@@ -1,7 +1,7 @@
 const storage = require('../services/storage/storage');
 const logger = require('../services/logger/logger');
 
-const loggerContext = { service: 'Nodes/nodesGetNameAutocomplete' };
+const loggerContext = { service: 'Nodes/nodesGetMatch' };
 
 /**
  * @typedef {object} Matches
@@ -14,12 +14,12 @@ const loggerContext = { service: 'Nodes/nodesGetNameAutocomplete' };
  * @param {string} searchText
  * @returns {Matches[]}
  */
-module.exports = async function nodesGetNameAutocomplete(searchText) {
+module.exports = async function nodesGetMatch(searchText) {
   logger.debug(searchText, loggerContext);
 
   if (!searchText) {
     return null;
   }
 
-  return storage.nodesGetNameAutocomplete(searchText);
+  return storage.nodesMatch(searchText);
 }

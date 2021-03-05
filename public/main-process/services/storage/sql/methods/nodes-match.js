@@ -1,6 +1,6 @@
 const { promisify } = require('util');
 
-const loggerContext = { service: 'Storage/sqlite/nodesGetNameAutocomplete' };
+const loggerContext = { service: 'Storage/sqlite/nodesMatch' };
 
 module.exports = async function nodesGetNameAutocomplete({ logger, db, searchTerm }) {
   if (!searchTerm) { return null; }
@@ -17,7 +17,6 @@ module.exports = async function nodesGetNameAutocomplete({ logger, db, searchTer
       ON NodesAlias_fts.rowid = NodesAlias.id
       WHERE NodesAlias_fts MATCH ?
       ORDER BY NodesAlias_fts.rank 
-      LIMIT 5
     `,
     [actualSearch]
   );
@@ -43,7 +42,12 @@ function glue(arr) {
 }
 
 function sanitize(word) {
-  if (word.indexOf('.') !== -1 && word.charAt(0) !== '"') {
+  if (
+    (
+      (word.indexOf('.') !== -1)
+      || (word.indexOf('/') !== -1)
+    )
+    && (word.charAt(0) !== '"')) {
     return `"${word}"`;
   }
 

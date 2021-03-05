@@ -1,13 +1,13 @@
 import { uid } from 'react-uid';
 import appRuntime from '../../services/appRuntime';
 
-export default async function addOrEditNodes(nodes) {
+export default async function postNodes(nodes) {
   const requests = nodes.map((node) => {
     if (!node.name) {
-      throw new Error('addNodes - missing (name)');
+      throw new Error('postNodes - missing (name)');
     }
     if (!node.type) {
-      throw new Error('addNodes - missing (type)');
+      throw new Error('postNodes - missing (type)');
     }
   
     const receipt = uid(node, Date.now());
@@ -17,7 +17,7 @@ export default async function addOrEditNodes(nodes) {
       uid: receipt,
     };
   
-    return appRuntime.invoke('nodes-addOrEdit', payload);
+    return appRuntime.invoke('nodes-post', payload);
   });
 
   return Promise.all(requests);

@@ -28,7 +28,7 @@ module.exports = class TransactionsImport {
     this.columnMappings = request;
   }
 
-  async getTargetMatches() {
+  async getTargets() {
     const targetIndex = this.columnMappings.findIndex((column) => column === 'target');
 
     if (targetIndex === -1) {
@@ -44,17 +44,9 @@ module.exports = class TransactionsImport {
         return;
       }
 
-      // Find if match any name
-
-      // Find if match any alias
-
-      // Best Guess?
-      this.targetNodes[targetName] = '?';
-
-      // Should create
       this.targetNodes[targetName] = null;
     });
 
-    return this.targetNodes;
+    return Object.keys(this.targetNodes);
   }
 }

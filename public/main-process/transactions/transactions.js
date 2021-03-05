@@ -19,11 +19,11 @@ module.exports = class Transactions {
     ipcMain.handle('transactions-import-setFile', this.setImportFilePath.bind(this));
     ipcMain.handle('transactions-import-preview', this.getImportFilePreview.bind(this));
     ipcMain.handle('transactions-import-assignColumns', this.setImportColumns.bind(this));
-    ipcMain.handle('transactions-import-requestTargets', this.getImportTargetMatches.bind(this));
+    ipcMain.handle('transactions-import-requestTargets', this.getImportTargets.bind(this));
 
     this.bulkImport = null;
 
-    logger.info('Service: Transactions ...ready');
+    logger.debug('Service: Transactions ...ready');
   }
 
   async init() {
@@ -102,9 +102,9 @@ module.exports = class Transactions {
    * @param {*} event 
    * @param {*} request 
    */
-  async getImportTargetMatches(event, request) {
+  async getImportTargets(event, request) {
     try {
-      return this.bulkImport.getTargetMatches();
+      return this.bulkImport.getTargets();
     } catch (e) {
       throw e;
     }

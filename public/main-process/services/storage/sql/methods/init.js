@@ -1,6 +1,8 @@
 const Schema = require('../schema');
 
-module.exports = async function init(db) {
+const loggerContext = { service: 'Storage/sqlite/init' };
+
+module.exports = async function init({ logger, db }) {
   // sync
   db.serialize(() => {
     Schema.create.forEach((query) => {
@@ -8,6 +10,6 @@ module.exports = async function init(db) {
     })
   });
 
-  console.log('schema created');
+  logger.info('Schema Created', loggerContext);
   return true;
 }

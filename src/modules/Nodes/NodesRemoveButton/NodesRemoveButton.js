@@ -4,7 +4,9 @@ import NodesServices from '../../../services/nodes';
 export default function NodesRemoveButton({ id, children }) {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const clickHandler = async () => {
+  const clickHandler = async (e) => {
+    e.preventDefault();
+  
     console.info('NodesRemoveButton - clicked');
     setIsConfirmed(false);
     

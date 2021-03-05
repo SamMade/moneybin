@@ -15,7 +15,7 @@ const resetFields = {
   alias: [],
 };
 
-export default function NodesAddForm({ editId, closeHandler }) {
+export default function NodesPostForm({ editId, closeHandler }) {
   const origFields = useRef(resetFields);
   const [addOrEdit, setAddOrEdit] = useState('add');
   const [isConfirmed, setIsConfirmed] = useState(null);
@@ -105,14 +105,14 @@ export default function NodesAddForm({ editId, closeHandler }) {
     });
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    console.info('NodesAddForm - clicked');
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    console.info('NodesPostForm - clicked');
 
     setIsConfirmed(null);
 
     try {
-      const receipt = await NodesServices.addOrEditNodes([
+      const receipt = await NodesServices.postNodes([
         {
           ...(addOrEdit === 'edit' && { id: editId }),
           ...formFields,
@@ -143,10 +143,10 @@ export default function NodesAddForm({ editId, closeHandler }) {
             id={uid('name')}
             type="text"
             value={formFields.name}
-            onChange={(event) => {
+            onChange={(e) => {
               setFormFields({
                 ...formFields,
-                name: event.target.value,
+                name: e.target.value,
               });
             }}
           />
@@ -157,10 +157,10 @@ export default function NodesAddForm({ editId, closeHandler }) {
           <select
             id={uid('type')}
             value={formFields.type}
-            onChange={(event) => {
+            onChange={(e) => {
               setFormFields({
                 ...formFields,
-                type: event.target.value,
+                type: e.target.value,
               });
             }}
           >
@@ -177,10 +177,10 @@ export default function NodesAddForm({ editId, closeHandler }) {
             id={uid('Default')}
             type="checkbox"
             checked={formFields.isDefault}
-            onChange={(event) => {
+            onChange={(e) => {
               setFormFields({
                 ...formFields,
-                isDefault: event.target.checked,
+                isDefault: e.target.checked,
               });
             }}
           />
@@ -205,8 +205,8 @@ export default function NodesAddForm({ editId, closeHandler }) {
                 id={uid('Alias', aliasIndex)}
                 type="text"
                 value={alias}
-                onChange={(event) => {
-                  aliasChangeHandler(event.target.value, aliasIndex);
+                onChange={(e) => {
+                  aliasChangeHandler(e.target.value, aliasIndex);
                 }}
               />
               <button
@@ -244,12 +244,12 @@ export default function NodesAddForm({ editId, closeHandler }) {
   );
 }
 
-NodesAddForm.propTypes = {
+NodesPostForm.propTypes = {
   closeHandler: PropTypes.func,
   editId: PropTypes.number,
 };
 
-NodesAddForm.defaultProps = {
+NodesPostForm.defaultProps = {
   closeHandler: () => {},
   editId: undefined,
 };
