@@ -1,0 +1,8 @@
+.alert {
+  padding: 1rem;
+}
+
+.error {
+  color: white;
+  background-color: red;
+}

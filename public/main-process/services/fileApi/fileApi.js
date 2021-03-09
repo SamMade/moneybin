@@ -8,6 +8,9 @@ const lstat = promisify(fs.lstat);
 
 module.exports = class FileImporter {
   constructor() {
+    /**
+     * @type {string} file path
+     */
     this.filePath = null;
   }
 

@@ -5,14 +5,14 @@ const loggerContext = { service: 'Storage' };
 /**
  * @typedef {import('../../nodes/nodes-post').nodesPostRequest} NodeAdd
  * @typedef {import('../../nodes/nodes-get').getRequest} NodeGet
- * @typedef {import('../../nodes/nodes-getMany').getManyRequest} NodeGetMany 
+ * @typedef {import('../../nodes/nodes-getMany').getManyRequest} NodeGetMany
+ * @typedef {import('../../transactions/transactions-post').transactionsPostRequest} TransactionAdd
  */
 
 class Storage {
   constructor() {
     this.adapterInstance = null;
   
-    this.transactionsAdd = null;
     this.transactionsRemove = null;
     this.transactionsGet = null;
     this.transactionsGetMany = null;
@@ -28,7 +28,6 @@ class Storage {
     const adapterInstance = new adapter(logger, params);
     this.adapterInstance = adapterInstance;
     
-    this.transactionsAdd = adapterInstance.transactionsAdd;
     this.transactionsRemove = adapterInstance.transactionsRemove;
     this.transactionsGet = adapterInstance.transactionsGet;
     this.transactionsGetMany = adapterInstance.transactionsGetMany;
@@ -92,6 +91,15 @@ class Storage {
   async nodesGetNameAutocomplete(searchTerm) {
     logger.debug('request: nodesGetNameAutocomplete', loggerContext);
     return this.adapterInstance.nodesGetNameAutocomplete({ logger, searchTerm });
+  }
+
+  /**
+   * Add / Update Transactions
+   * @param {TransactionAdd[]} transactions 
+   */
+  async transactionsPost(transactions) {
+    logger.debug('request: transactionsPost', loggerContext);
+    return this.adapterInstance.transactionsPost({ logger, transactions });
   }
 }
 

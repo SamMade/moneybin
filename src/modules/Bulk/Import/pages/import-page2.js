@@ -1,8 +1,13 @@
+import { get } from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { uid } from 'react-uid';
+
 import appRuntime from '../../../../services/appRuntime';
 
+import Alert from '../../../../shared/Alert/Alert';
+
 export default function BulkImportAssignColumns({
+  hide,
   closeHandler,
   submitHandler,
 }) {
@@ -11,34 +16,55 @@ export default function BulkImportAssignColumns({
     header: [],
     headerMap: [],
     body: [],
+    errors: [],
   });
 
   useEffect(() => {
-    const getPreview = async () => {
-      const fileData = await appRuntime.invoke('transactions-import-preview');
-
-      setLocalState({
-        ...localState,
-        ...fileData,
-        headerMap: fileData.header.map(() => ''),
-        isLoading: false,
-      });
-    };
+    if (hide) {
+      return;
+    }
 
     setLocalState({ ...localState, isLoading: true });
-    getPreview();
-  }, []);
 
+    (async () => {
+      const mappingsPromise = appRuntime.invoke('bulk-import-getColumns');
+      const fileDataPromise = appRuntime.invoke('bulk-import-preview');
+
+      const [mappings, fileData] = await Promise.all([mappingsPromise, fileDataPromise]);
+
+      setLocalState((prev) => ({
+        ...prev,
+        ...fileData,
+        headerMap: fileData.header.map((_, headerIndex) => get(mappings, `[${headerIndex}]`) || ''),
+        isLoading: false,
+      }));
+    })();
+  }, [hide]);
+
+  /**
+   * Next Page
+   */
   const onSubmit = (e) => {
     e.preventDefault();
 
+    // If nothing was mapped
+    if (!localState.headerMap.some((colType) => !!colType)) {
+      setLocalState((prev) => ({
+        ...prev,
+        errors: [{ type: 'error', message: 'Mappings Required'}],
+      }));
+      return;
+    }
+
+    // TODO: if duplicate mappings
+
     (async () => {
-      await appRuntime.invoke('transactions-import-assignColumns', localState.headerMap);
+      await appRuntime.invoke('bulk-import-assignColumns', localState.headerMap);
       submitHandler();
     })();
   }
 
-  const ColumnMap = ({ colIndex }) => {
+  const ColumnMapField = ({ colIndex }) => {
     return (
       <select
         id={uid(`col_${colIndex}`)}
@@ -46,10 +72,11 @@ export default function BulkImportAssignColumns({
         onChange={(event) => {
           const tempHeader = [...localState.headerMap];
           tempHeader[colIndex] = event.target.value;
-          setLocalState({
-            ...localState,
+          setLocalState((prev) => ({
+            ...prev,
+            errors: [],
             headerMap: tempHeader,
-          });
+          }));
         }}
       >
         <FieldMapOptions />
@@ -58,8 +85,12 @@ export default function BulkImportAssignColumns({
   };
 
   return (
-    <div>
+    <div style={{ display: (hide) ? 'none' : undefined}}>
       <h1>Bulk Import</h1>
+
+      { localState.errors.map((err) => (
+        <Alert key={uid(err)} type={err.type}>{ err.message }</Alert>
+      ))}
 
       <form className="pure-form pure-form-aligned" onSubmit={onSubmit}>
         <table>
@@ -73,7 +104,7 @@ export default function BulkImportAssignColumns({
                   <label htmlFor={uid(`col_${colIndex}`)} className="sr-only">
                     Field:
                   </label>
-                  <ColumnMap colIndex={colIndex} />
+                  <ColumnMapField colIndex={colIndex} />
                 </th>
               ))}
             </tr>
@@ -116,7 +147,7 @@ function FieldMapOptions() {
       <option value="">--Ignore--</option>
       <option value="target">To/From</option>
       <option value="amount">Amount</option>
-      <option value="date">Date</option>
+      <option value="postDate">Date</option>
       <option value="notes">Notes</option>
     </>
   );

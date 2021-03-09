@@ -25,7 +25,6 @@ const resetFields = {
 
 // autocomplete names
 const autocompleteName = async (name) => {
-  console.log('autocomplete');
   const list = await NodesServices.getNameAutocomplete(name);
   if (!list) {
     return null;

@@ -2,8 +2,10 @@ const moment = require('moment');
 const storage = require('../services/storage/storage');
 const logger = require('../services/logger/logger');
 
+const loggerContext = { service: 'Transactions/transactionsPost' };
+
 /**
- * @typedef transactionsAddRequest
+ * @typedef transactionsPostRequest
  * @type {object}
  * @property {string} to
  * @property {string} from
@@ -13,10 +15,10 @@ const logger = require('../services/logger/logger');
  */
 
 /**
- * @param {transactionsAddRequest[]} request
+ * @param {transactionsPostRequest[]} request
  */
-module.exports = async function transactionsAdd(request) {
-  logger.debug('Event - Transaction to add: ', request);
+module.exports = async function transactionsPost(request) {
+  logger.debug('Event - Transaction to add: ', request, loggerContext);
   
   const input = !Array.isArray(request) ? [request] : request;
   
@@ -47,9 +49,9 @@ module.exports = async function transactionsAdd(request) {
     return tranformRequests(transaction);
   });
 
-  const ids = await storage.transactionsAdd(mappedRequests);
+  const ids = await storage.transactionsPost(mappedRequests);
 
-  logger.debug(`Event - Transaction added with id: ${ids.join(", ")}`);
+  logger.debug(`Event - Transaction added with id: ${ids.join(', ')}`, loggerContext);
   
   return input.map((transaction, transactionIndex) => ({ ...transaction, id: ids[transactionIndex] }));
 }

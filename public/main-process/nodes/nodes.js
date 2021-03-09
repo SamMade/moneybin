@@ -11,16 +11,23 @@ const nodesGetMatch = require('./nodes-getMatch');
 const loggerContext = { service: 'Nodes' };
 
 /**
+ * @typedef {object} Node
+ * @property {string | number} id
+ * @property {string} name
+ * @property {string} type
+ * @property {string[]} alias
+
+/**
  * @module Nodes
  */
 module.exports = class Nodes {
   constructor() {
-    ipcMain.handle('nodes-get', this.getNode.bind(this));
-    ipcMain.handle('nodes-getMany', this.getManyNodes.bind(this));
-    ipcMain.handle('nodes-post', this.postNode.bind(this));
-    ipcMain.handle('nodes-remove', this.removeNode.bind(this));
-    ipcMain.handle('nodes-getName-autocomplete', this.getNameAutocomplete.bind(this));
-    ipcMain.handle('nodes-getMatch', this.getMatch.bind(this));
+    ipcMain.handle('nodes-get', this.constructor.getNode);
+    ipcMain.handle('nodes-getMany', this.constructor.getManyNodes);
+    ipcMain.handle('nodes-post', this.constructor.postNode);
+    ipcMain.handle('nodes-remove', this.constructor.removeNode);
+    ipcMain.handle('nodes-getName-autocomplete', this.constructor.getNameAutocomplete);
+    ipcMain.handle('nodes-getMatch', this.constructor.getMatch);
 
     logger.debug('Nodes init ready', loggerContext);
   }
@@ -34,26 +41,30 @@ module.exports = class Nodes {
    * Add / Update Node
    * @param {*} event 
    * @param {import('./nodes-post').nodesAddRequest} request 
-   * @returns {string} id of the node
+   * @returns {string[] | string} id of the node
    */
-  async postNode(event, request) {
+  static async postNode(event, request) {
     try {
       const newNode = await nodesPost(request);
-      event.sender.send('server-event', 'node-added');
-      return newNode.id;
+
+      if (event) {
+        event.sender.send('server-event', 'node-added');
+      }
+
+      return (Array.isArray(newNode)) ? newNode.map((n) => n.id) : newNode.id;
     } catch (e) {
       logger.error(e, loggerContext);
       return e;
     }
   }
 
-  async removeNode(event, request) {
+  static async removeNode(event, request) {
     const nodeId = await nodesRemove(request);
     event.sender.send('server-event', 'node-removed');
     return nodeId;
   }
 
-  async getNode(event, request) {
+  static async getNode(event, request) {
     try {
       const node = await nodesGet(request);
       return node;
@@ -68,11 +79,11 @@ module.exports = class Nodes {
    * @param {*} event 
    * @param {import('./nodes-getMany').getManyRequest} request 
    */
-  async getManyNodes(event, request) {
+  static async getManyNodes(event, request) {
     return nodesGetMany(request);
   }
 
-  async getNameAutocomplete(event, request) {
+  static async getNameAutocomplete(event, request) {
     return nodesNameAutocomplete(request);
   }
 
@@ -82,7 +93,7 @@ module.exports = class Nodes {
    * @param {*} request 
    * @return {import('./nodes-getMatch').Matches[]}
    */
-  async getMatch(event, request) {
+  static async getMatch(event, request) {
     return nodesGetMatch(request);
   }
 }

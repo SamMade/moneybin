@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow} = require('electron');
 const path = require('path');
 
 // dependencies
@@ -10,6 +10,7 @@ const Storage = require('./main-process/services/storage/storage');
 const AdminService = new (require('./main-process/admin/admin'))();
 const NodesService = new (require('./main-process/nodes/nodes'))();
 const TransactionsService = new (require('./main-process/transactions/transactions'))();
+const BulkImportService = new (require('./main-process/bulkImport/bulkImport'))();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -42,7 +43,7 @@ function createWindow () {
     // mainWindow.webContents.send('nodes', nodes);
   });
 
-  mainWindow.once("ready-to-show", () => {
+  mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
 
@@ -66,6 +67,7 @@ app.on('ready', () => {
       AdminService.init(),
       NodesService.init(),
       TransactionsService.init(),
+      BulkImportService.init(),
     ];
   
     await Promise.all(initPromises);
@@ -95,55 +97,3 @@ app.on('activate', function () {
     createWindow();
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
-// function emitTransaction() {
-//   console.log('Event - Transactions Updated');
-//   mainWindow.send('transactions', transactions);
-// }
-
-// ipcMain.on('add-transaction', async (event, transaction) => {
-//   console.log('Add Transaction', transaction);
-//   // add to db
-//   const {"last_insert_rowid()":id} = await TransactionsService.addTransaction({
-//     date: transaction.date,
-//     from: transaction.from,
-//     to: transaction.to,
-//     amount: transaction.amount,
-//   });
-//   console.info('Added Transaction to DB');
-
-//   // add to UI
-//   transactions.push({
-//     postDate: transaction.date,
-//     source: Number.parseInt(transaction.from),
-//     target: Number.parseInt(transaction.to),
-//     amount: Number.parseFloat(transaction.amount),
-//     id,
-//   });
-//   console.info('Added Transaction to UI');
-
-//   // announce
-//   emitTransaction();
-// });
-
-// ipcMain.on('remove-transaction', async (event, removedId) => {
-//   console.log('Remove Transaction', removedId);
-//   // remove from db
-//   await TransactionsService.removeTransaction({
-//     id: removedId
-//   });
-//   console.info('Removed Transaction from DB');
-
-//   // remove from UI
-//   const index = transactions.findIndex((item) => item.id == removedId);
-//   if (index !== -1) { 
-//     transactions.splice(index, 1);
-//     console.info('Removed Transaction from UI state');
-//   }
-
-//   // announce
-//   emitTransaction();
-// });

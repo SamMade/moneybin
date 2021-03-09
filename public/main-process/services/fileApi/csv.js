@@ -18,6 +18,9 @@ module.exports = class CSV extends fileApi {
     return this.headers;
   }
 
+  /**
+   * Returns a memoized version of data
+   */
   async getContent() {
     logger.debug('CSV - getContent');
     if (!this.data.length) {
@@ -42,6 +45,9 @@ module.exports = class CSV extends fileApi {
     };
   }
 
+  /**
+   * Loads/Refreshes CSV data
+   */
   async load() {
     logger.debug('CSV - load');
 

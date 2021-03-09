@@ -12,7 +12,8 @@ module.exports = {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       node INTEGER NOT NULL,
       alias TEXT UNIQUE NOT NULL,
-      isPrimary INTEGER DEFAULT 0
+      isPrimary INTEGER DEFAULT 0,
+      FOREIGN KEY(node) REFERENCES Nodes(id)
     );`,
     // Node Aliases FTS
     'CREATE VIRTUAL TABLE IF NOT EXISTS NodesAlias_fts USING fts5(name, tokenize=porter);',
@@ -32,8 +33,8 @@ module.exports = {
     `CREATE TRIGGER IF NOT EXISTS after_Nodes_update UPDATE OF name ON Nodes BEGIN
       UPDATE NodesAlias SET alias = new.name WHERE node = old.id AND isPrimary = 1;
     END;`,
-    `CREATE TRIGGER IF NOT EXISTS after_Nodes_delete AFTER DELETE ON Nodes BEGIN
-      DELETE FROM NodesAlias WHERE node = old.id;
+    `CREATE TRIGGER IF NOT EXISTS before_Nodes_delete BEFORE DELETE ON Nodes BEGIN
+      DELETE FROM NodesAlias WHERE node = new.id;
     END;`,
     // Node Aliases FTS Trigger
     `CREATE TRIGGER IF NOT EXISTS after_NodesAlias_insert AFTER INSERT ON NodesAlias BEGIN

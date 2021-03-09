@@ -39,18 +39,20 @@ module.exports = async function nodesPost(request) {
       throw new Error('Missing required field (name)');
     }
 
-    if (!node.type) {
-      throw new Error('Missing required field (type)');
-    }
+    // if (!node.type) {
+    //   throw new Error('Missing required field (type)');
+    // }
 
     return tranformRequests(node);
   });
 
   const ids = await storage.nodesPost(mappedRequests);
 
-  logger.info('Node upsert', `ids: ${ids.join(', ')}`, loggerContext);
+  logger.info(`Node upsert ids: ${ids.join(', ')}`, loggerContext);
 
-  return input.map((node, nodeIndex) => ({ ...node, id: ids[nodeIndex] }));
+  const nodesCreated = input.map((node, nodeIndex) => ({ ...node, id: ids[nodeIndex] }));
+  
+  return Array.isArray(request) ? nodesCreated : nodesCreated[0];
 };
 
 /**
@@ -60,7 +62,7 @@ function tranformRequests(node) {
   return {
     id: node.id || undefined,
     name: node.name,
-    type: node.type,
+    type: node.type || '',
     alias: node.alias,
     isDefault: node.isDefault,
   };

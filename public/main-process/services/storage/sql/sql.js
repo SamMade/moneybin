@@ -9,7 +9,7 @@ const nodesGet = require('./methods/nodes-get');
 const nodesGetMany = require('./methods/nodes-getMany');
 const nodesMatch = require('./methods/nodes-match');
 const nodesGetNameAutocomplete = require('./methods/nodes-getName-autocomplete');
-const transactionsAdd = require('./methods/transactions-add');
+const transactionsPost = require('./methods/transactions-post');
 const transactionsRemove = require('./methods/transactions-remove');
 const transactionsGet = require('./methods/transactions-get');
 const transactionsGetMany = require('./methods/transactions-getMany');
@@ -26,7 +26,6 @@ class SqlStorage {
       logger.info('Connected to the moneybin database.', loggerContext);
     });
 
-    this.transactionsAdd = (...args) => transactionsAdd(this.db, ...args);
     this.transactionsRemove = (...args) => transactionsRemove(this.db, ...args);
     this.transactionsGet = (...args) => transactionsGet(this.db, ...args);
     this.transactionsGetMany = (...args) => transactionsGetMany(this.db, ...args);
@@ -69,5 +68,11 @@ class SqlStorage {
    */
   nodesGetNameAutocomplete({ ...params }) { return nodesGetNameAutocomplete({ logger: console, ...params, db: this.db }); }
   
+  /**
+   * @param {object} params
+   * @param {import('../storage').TransactionAdd[]} params.transactions 
+   */
+  transactionsPost({ ...params }) { return transactionsPost({ logger: console, ...params, db: this.db }); }
+
 };
 module.exports = SqlStorage;
